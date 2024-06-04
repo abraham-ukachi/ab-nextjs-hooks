@@ -23,16 +23,16 @@
 
 
 <p align="center">
-    <a href="https://ab-elements.vercel.app/docs/template" target="_blank"><b>Checkout abElements &rarr;</b></a>
+    <a href="https://ab-elements.vercel.app/docs/hooks" target="_blank"><b>Checkout abElements &rarr;</b></a>
 </p>
 
 
-# `ab-nextjs-template`
+# `ab-nextjs-hooks`
 
 > IMPORTANT: This is a work in progress and subject to major changes until version 1.0.
 
 
-✏️ This is a lightweight collection of React template created by [Abraham Ukachi](https://github.com/abraham-ukachi), and optimized for [Next.js](https://nextjs.org/docs) applications 😎. 
+🪝 This is a lightweight collection of React hooks for abElements created by [Abraham Ukachi](https://github.com/abraham-ukachi), and optimized for [Next.js](https://nextjs.org/docs) applications 😎. 
 
 
 
@@ -43,38 +43,49 @@
 #### npm
 
 ```bash
-npm i ab-nextjs-template 
+npm i ab-nextjs-hooks 
 ```
 
 #### pnpm
 
 ```bash
-pnpm install ab-nextjs-template 
+pnpm install ab-nextjs-hooks 
 ```
 
 ---
 
 
-## [Template]
+## Client Hooks
 
-A list of all the supported **template** and their current status:
-
-| No. | Name | Status |
-|:----|:-----|:-------|
-| 1 | *`?`* | Pending |
-| 2 | *`?`* | Pending |
-| 3 | *`?`* | Pending |
-
-Or
+A list of all the supported custom **hooks** and their current status:
 
 | No. | Name | File | Status |
 |:----|:-----|:-----|:-------|
-| 1 | *`?`* | **-** | Pending |
-| 2 | *`?`* | **-** | Pending |
-| 3 | *`?`* | **-** | Pending |
+| 1 | *`useAbTheme`* | **useAbTheme.ts** | Pending |
+| 2 | *`useAbMenu`* | **useAbMenu.ts** | Pending |
+| 3 | *`useAbDialog`* | **useAbDialog.ts** | Pending |
+| 4 | *`useAbToast`* | **useAbToast.ts** | Pending |
+| 5 | *`useAbConfetti`* | **useAbConfetti.ts** | Pending |
 
 
 > NOTE:
+
+
+
+## Server Hooks
+
+A list of all the supported custom **hooks** and their current status:
+
+| No. | Name | File | Status |
+|:----|:-----|:-----|:-------|
+| 1 | *`useAbApp`* | **server/useAbApp.ts** | Pending |
+| 2 | *`useAbAuth`* | **server/useAbAuth.ts** | Pending |
+| 3 | *`useAbNavLinks`* | **server/useAbNavLinks.ts** | Pending |
+
+
+
+> NOTE:
+
 
 
 
@@ -97,7 +108,7 @@ You can check out [the abElements GitHub repository](https://github.com/abraham-
 
 ## License
 
-This **`ab-nextjs-template`** project is [MIT Licensed](./LICENSE) ;)
+This **`ab-nextjs-hooks`** project is [MIT Licensed](./LICENSE) ;)
 
 
 
