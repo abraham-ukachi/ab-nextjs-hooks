@@ -1,25 +1,22 @@
 {
   "name": "ab-nextjs-hooks",
   "version": "0.1.0",
-  "description": "🪝 A lightweight collection of server & client React hooks for abElements created by Abraham Ukachi, and optimized for Next.js applications 😎.",
+  "description": "\ud83e\ude9d A lightweight collection of server & client React hooks for abElements created by Abraham Ukachi, and optimized for Next.js applications \ud83d\ude0e.",
+  "type": "module",
   "main": "index.ts",
   "types": "types/index.d.ts",
-
   "homepage": "https://github.com/abraham-ukachi/ab-nextjs-hooks",
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/abraham-ukachi/ab-nextjs-hooks.git"
   },
-
   "bugs": {
     "url": "https://github.com/abraham-ukachi/ab-nextjs-hooks/issues"
   },
-
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint . --fix",
+    "test": "vitest run"
   },
-
   "keywords": [
     "react",
     "nextjs",
@@ -29,12 +26,37 @@
     "ab-nextjs-hooks",
     "ab-elements"
   ],
-
   "author": {
     "name": "Abraham Ukachi",
     "url": "https://github.com/abraham-ukachi",
     "email": "abraham.ukachi@laplateforme.io"
   },
-
-  "license": "MIT"
+  "license": "MIT",
+  "peerDependencies": {
+    "next": "16.3.4",
+    "react": "^19",
+    "react-dom": "^19"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "16.3.4",
+    "next": "16.3.4",
+    "react": "^19",
+    "react-dom": "^19",
+    "typescript": "^5",
+    "vitest": "^3"
+  }
 }
