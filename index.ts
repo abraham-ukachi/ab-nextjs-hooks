@@ -1,13 +1,96 @@
-import type { HookCatalogEntry } from './types'
+/* 
+* @license MIT
+* ~~~~~~~~~~~~
+* ab-nextjs-hooks
+* ~~~~~~~~~~~~ 
+* Copyright (c) 2024 Abraham Ukachi. The abElements Project.
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the 'Software'), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions: 
+*  
+* The above copyright notice and this permission notice shall be included in all 
+* copies or substantial portions of the Software. 
+*
+* THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*
+* @project: ab-nextjs-hooks
+* @name: Hooks - Package Catalog
+* @file: index.ts
+* @type: TypeScript
+* @authors: Abraham Ukachi <abraham.ukachi@laplateforme.io>
+*
+* Example usage:
+*   1+|> // import the whole hook catalog
+*    -|> import abHooks from './index'
+*    -|>
+*    -|> // console.log(abHooks.supportedHooks) // ==> [ { name: 'useAbTheme', ... }, ... ]
+*    -|>
+*
+*   2+|> // grab the hooks as a named import & filter them
+*    -|> import { supportedHooks } from './index'
+*    -|>
+*    -|> // console.log(supportedHooks.filter((hook) => hook.kind === 'server'))
+*    -|>
+*/
 
+/*
+* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+* MOTTO: We'll always do more 😜!!!
+* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+*/
+
+
+
+// REACT types
+// REACT hooks
+// REACT components
+
+
+// NEXT.JS types
+// NEXT.JS hooks
+// NEXT.JS components
+
+
+// AB types
+import type { HookCatalogEntry } from './types'
+// AB hooks
+// AB components
+
+
+// OTHER types
+// OTHER hooks
+// OTHER components
+
+
+
+
+// ===== SUPPORTED HOOKS - PACKAGE CATALOG ===== //
+
+
+// every AB hook this package ships, as a catalog entry
+// (each one has a `name`, `file`, `kind` & `status`)
 const supportedHooks: Array<HookCatalogEntry> = [
+  // ------ CLIENT hooks (run in the browser) ------
   { name: 'useAbTheme', file: 'useAbTheme.ts', kind: 'client', status: 'Done' },
   { name: 'useAbMenu', file: 'useAbMenu.ts', kind: 'client', status: 'Done' },
   { name: 'useAbDialog', file: 'useAbDialog.ts', kind: 'client', status: 'Done' },
   { name: 'useAbToast', file: 'useAbToast.ts', kind: 'client', status: 'Done' },
   { name: 'useAbConfetti', file: 'useAbConfetti.ts', kind: 'client', status: 'Done' },
+
+  // --- data & storage hooks ---
   { name: 'useAbDataIndexer', file: 'useAbDataIndexer.ts', kind: 'client', status: 'Done' },
   { name: 'useAbDataMapper', file: 'useAbDataMapper.ts', kind: 'client', status: 'Done' },
+
   { name: 'useAbBrand', file: 'useAbBrand.ts', kind: 'client', status: 'Done' },
   { name: 'useAbBrandRequest', file: 'useAbBrandRequest.ts', kind: 'client', status: 'Done' },
   { name: 'useAbBrandLabels', file: 'useAbBrandLabels.ts', kind: 'client', status: 'Done' },
@@ -38,13 +121,21 @@ const supportedHooks: Array<HookCatalogEntry> = [
   { name: 'useAbBridgeLabels', file: 'useAbBridgeLabels.ts', kind: 'client', status: 'Done' },
   { name: 'useAbUser', file: 'useAbUser.ts', kind: 'client', status: 'Done' },
   { name: 'useAbAuthRequest', file: 'useAbAuthRequest.ts', kind: 'client', status: 'Done' },
+
+  // ------ SERVER hooks (run on the server only) ------
   { name: 'useAbApp', file: 'server/useAbApp.ts', kind: 'server', status: 'Done' },
   { name: 'useAbAuth', file: 'server/useAbAuth.ts', kind: 'server', status: 'Done' },
   { name: 'useAbNavLinks', file: 'server/useAbNavLinks.ts', kind: 'server', status: 'Done' }
 ]
 
+
+// bundle the catalog into a package object as `abHooks`
 const abHooks = { supportedHooks }
 
+
+// export `supportedHooks` catalog as a named export
 export { supportedHooks }
 
+
+// export `abHooks` package object as default
 export default abHooks

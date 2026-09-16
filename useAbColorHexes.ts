@@ -1,13 +1,98 @@
+/* 
+* @license MIT
+* ~~~~~~~~~~~~
+* ab-nextjs-hooks
+* ~~~~~~~~~~~~ 
+* Copyright (c) 2024 Abraham Ukachi. The abElements Project.
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the 'Software'), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions: 
+*  
+* The above copyright notice and this permission notice shall be included in all 
+* copies or substantial portions of the Software. 
+*
+* THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*
+* @project: ab-nextjs-hooks
+* @name: Colors - AB Hex Hook
+* @file: useAbColorHexes.ts
+* @type: TypeScript
+* @authors: Abraham Ukachi <abraham.ukachi@laplateforme.io>
+*
+* Example usage:
+*   1+|> // Use the color hexes hook
+*    -|> import useAbColorHexes from './useAbColorHexes'
+*    -|>
+*    -|> const { getHexColors } = useAbColorHexes()
+*    -|>
+*    -|> // console.log(getHexColors('gold_black')) // ==> ["#FFD700", "#000000"]
+*    -|>
+*
+*   2+|> // Get the whole color hex map
+*    -|> const { colorHexes } = useAbColorHexes()
+*    -|>
+*    -|> // console.log(colorHexes['lime']) // ==> "#00ff00"
+*    -|>
+*/
+
+
+/*
+* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+* MOTTO: We'll always do more 😜!!!
+* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+*/
+
+
 'use client'
 
-import { useCallback, useMemo } from 'react'
 
+// REACT types
+// REACT hooks
+import { useCallback, useMemo } from 'react'
+// REACT components
+
+
+// NEXT.JS types
+// NEXT.JS hooks
+// NEXT.JS components
+
+
+// AB types
+// AB hooks
+// AB components
+
+
+// OTHER types
+// OTHER hooks
+// OTHER components
+
+
+
+
+// ===== COLOR HEXES - TYPES & CONSTANTS ===== //
+
+
+// create a color hexes result interface as `AbColorHexesResult`
 export interface AbColorHexesResult {
   colorHexes: Record<string, string>
   getHexColors: (key: string) => Array<string>
 }
 
+
+
+// base color hex map: every CSS named color + abElements' tortoiseshell palette
 const BASE_COLOR_HEXES: Record<string, string> = {
+  // --- CSS named colors - ALL of them ---
   aliceblue: '#f0f8ff',
   antiquewhite: '#faebd7',
   aqua: '#00ffff',
@@ -156,6 +241,8 @@ const BASE_COLOR_HEXES: Record<string, string> = {
   whitesmoke: '#f5f5f5',
   yellow: '#ffff00',
   yellowgreen: '#9acd32',
+
+  // --- abElements' tortoiseshell palette (the base eco shades) ---
   'tortoiseshell-gold': '#D2B48C',
   'tortoiseshell-black': '#9E7B4D',
   'tortoiseshell-silver': '#A9A9A9',
@@ -175,18 +262,44 @@ const BASE_COLOR_HEXES: Record<string, string> = {
   'tortoiseshell-fuchsia': '#FF00FF'
 }
 
+
+
+
+// ===== useAbColorHexes - AB HOOK ===== //
+
+
+/**
+ * @name useAbColorHexes
+ * @description A color-hex hook that exposes the base color hex map & a fetcher for
+ * combined (snake_case) color keys like 'gold_black'
+ *
+ * @returns { AbColorHexesResult }
+ */
 const useAbColorHexes = (): AbColorHexesResult => {
+
+  // memoize the base color hexes once; the map never changes
   const colorHexes = useMemo(() => BASE_COLOR_HEXES, [])
 
+  // create the hex colors fetcher via useCallback
   const getHexColors = useCallback((colorKey: string): Array<string> => {
+
+    // split the color key on '_' to get each base color, e.g. 'gold_black' => ['gold', 'black']
     const separatedKeys: Array<string> = colorKey?.split('_') ?? []
 
+    // map every separated key to its hex value, falling back to '' when unknown
     return separatedKeys.map((separatedKey: string) => colorHexes[separatedKey] ?? '')
+
   }, [colorHexes])
 
+  // return `colorHexes` & `getHexColors`
   return { colorHexes, getHexColors }
+
 }
 
+
+// export `useAbColorHexes` hook as named export
 export { useAbColorHexes }
 
+
+// export `useAbColorHexes` hook as default
 export default useAbColorHexes
