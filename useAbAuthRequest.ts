@@ -284,7 +284,7 @@ const useAuthRequest = (params: UseAuthRequestParams = null, apiUrl: string = ''
 
   // build the `login` callback
   const login = useCallback(
-    async ({ identifier, password }: LoginParams = null): Promise<LoginSuccessResponse | LoginFailedResponse> => {
+    async (loginParams: LoginParams | null = null): Promise<LoginSuccessResponse | LoginFailedResponse> => {
       // return a promise so the caller can `await` the outcome
       return new Promise(async (resolve, reject) => {
         // signal the UI that we're fetching
@@ -293,8 +293,8 @@ const useAuthRequest = (params: UseAuthRequestParams = null, apiUrl: string = ''
 
         // merge the passed values with the prefilled params
         const payload: LoginPayload = {
-          identifier: identifier || params?.identifier,
-          password: password || params?.password
+          identifier: (loginParams?.identifier || params?.identifier) ?? '',
+          password: (loginParams?.password || params?.password) ?? ''
         }
 
         // create the POST request to the login endpoint
@@ -333,13 +333,7 @@ const useAuthRequest = (params: UseAuthRequestParams = null, apiUrl: string = ''
 
   // build the `register` callback
   const register = useCallback(
-    async ({
-      firstname,
-      lastname,
-      username,
-      email,
-      password
-    }: RegisterParams = null): Promise<RegisterSuccessResponse | RegisterFailedResponse> => {
+    async (registerParams: RegisterParams | null = null): Promise<RegisterSuccessResponse | RegisterFailedResponse> => {
       // return a promise so the caller can `await` the outcome
       return new Promise(async (resolve, reject) => {
         // signal the UI that we're fetching
@@ -348,11 +342,11 @@ const useAuthRequest = (params: UseAuthRequestParams = null, apiUrl: string = ''
 
         // merge the passed values with the prefilled params
         const payload: RegisterPayload = {
-          firstname: firstname || params?.firstname,
-          lastname: lastname || params?.lastname,
-          username: username || params?.username,
-          email: email || params?.email,
-          password: password || params?.password
+          firstname: (registerParams?.firstname || params?.firstname) ?? '',
+          lastname: (registerParams?.lastname || params?.lastname) ?? '',
+          username: (registerParams?.username || params?.username) ?? '',
+          email: (registerParams?.email || params?.email) ?? '',
+          password: (registerParams?.password || params?.password) ?? ''
         }
 
         // create the POST request to the register endpoint
@@ -390,7 +384,7 @@ const useAuthRequest = (params: UseAuthRequestParams = null, apiUrl: string = ''
 
   // build the `forgotPassword` callback
   const forgotPassword = useCallback(
-    async ({ email }: ForgotPasswordParams = null): Promise<ForgotPasswordSuccessResponse | ForgotPasswordFailedResponse> => {
+    async (forgotPasswordParams: ForgotPasswordParams | null = null): Promise<ForgotPasswordSuccessResponse | ForgotPasswordFailedResponse> => {
       // return a promise so the caller can `await` the outcome
       return new Promise(async (resolve, reject) => {
         // signal the UI that we're fetching
@@ -399,7 +393,7 @@ const useAuthRequest = (params: UseAuthRequestParams = null, apiUrl: string = ''
 
         // merge the passed email w/ the prefilled one
         const payload: ForgotPasswordPayload = {
-          email: email || params?.email
+          email: (forgotPasswordParams?.email || params?.email) ?? ''
         }
 
         // create the POST request to the forgot-password endpoint
@@ -437,11 +431,7 @@ const useAuthRequest = (params: UseAuthRequestParams = null, apiUrl: string = ''
 
   // build the `resetPassword` callback
   const resetPassword = useCallback(
-    async ({
-      password,
-      passwordConfirmation,
-      code
-    }: ResetPasswordParams = null): Promise<ResetPasswordSuccessResponse | ResetPasswordFailedResponse> => {
+    async (resetPasswordParams: ResetPasswordParams | null = null): Promise<ResetPasswordSuccessResponse | ResetPasswordFailedResponse> => {
       // return a promise so the caller can `await` the outcome
       return new Promise(async (resolve, reject) => {
         // signal the UI that we're fetching
@@ -450,9 +440,9 @@ const useAuthRequest = (params: UseAuthRequestParams = null, apiUrl: string = ''
 
         // merge the passed values w/ the prefilled ones
         const payload: ResetPasswordPayload = {
-          password: password || params?.password,
-          passwordConfirmation: passwordConfirmation || params?.passwordConfirmation,
-          code: code || params?.code
+          password: (resetPasswordParams?.password || params?.password) ?? '',
+          passwordConfirmation: (resetPasswordParams?.passwordConfirmation || params?.passwordConfirmation) ?? '',
+          code: (resetPasswordParams?.code || params?.code) ?? ''
         }
 
         // create the POST request to the reset-password endpoint

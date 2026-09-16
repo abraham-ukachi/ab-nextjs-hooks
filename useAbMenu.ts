@@ -152,12 +152,12 @@ const useAbMenu = (params: MenuParams, duration: number = DEFAULT_MENU_DURATION,
   const [isMenuCancelable, setIsMenuCancelable] = useState<boolean>(params.isCancelable || false)
 
   // --- queried DOM elements (gathered once the page has loaded) ---
-  const [currentMenusEl, setCurrentMenusEl] = useState<HTMLDivElement>(null)
-  const [currentMenuOriginEl, setCurrentMenuOriginEl] = useState<HTMLUListElement>(null)
-  const [currentMenuEl, setCurrentMenuEl] = useState<HTMLDivElement>(null)
+  const [currentMenusEl, setCurrentMenusEl] = useState<HTMLDivElement | null>(null)
+  const [currentMenuOriginEl, setCurrentMenuOriginEl] = useState<HTMLUListElement | null>(null)
+  const [currentMenuEl, setCurrentMenuEl] = useState<HTMLDivElement | null>(null)
 
-  const [currentBackdropEl, setCurrentBackdropEl] = useState<HTMLDivElement>(null)
-  const [currentCloseBtnEl, setCurrentCloseBtnEl] = useState<HTMLButtonElement>(null)
+  const [currentBackdropEl, setCurrentBackdropEl] = useState<HTMLDivElement | null>(null)
+  const [currentCloseBtnEl, setCurrentCloseBtnEl] = useState<HTMLButtonElement | null>(null)
 
   // --- animation timers ---
   const [hideBackdropTimer, setHideBackdropTimer] = useState<ReturnType<typeof setTimeout> | null>(null)
@@ -191,9 +191,9 @@ const useAbMenu = (params: MenuParams, duration: number = DEFAULT_MENU_DURATION,
 
     // clean up any pending timers when the part/id/el changes or on unmount
     return () => {
-      clearTimeout(hideBackdropTimer)
-      clearTimeout(hideMenuTimer)
-      clearTimeout(showMenuTimer)
+      clearTimeout(hideBackdropTimer ?? undefined)
+      clearTimeout(hideMenuTimer ?? undefined)
+      clearTimeout(showMenuTimer ?? undefined)
     }
 
   }, [currentPart, menuOrigin, menuId, currentMenusEl, currentMenuOriginEl, currentMenuEl, toggleIsReady, hideBackdropTimer, hideMenuTimer, showMenuTimer, currentBackdropEl])
@@ -202,7 +202,7 @@ const useAbMenu = (params: MenuParams, duration: number = DEFAULT_MENU_DURATION,
   const showBackdrop = useCallback(
     (isCancelable: boolean = isMenuCancelable): void => {
       currentBackdropEl?.setAttribute('cancelable', isCancelable.toString())
-      currentBackdropEl.hidden = false
+      currentBackdropEl!.hidden = false
     },
     [currentBackdropEl, isMenuCancelable]
   )
@@ -212,11 +212,11 @@ const useAbMenu = (params: MenuParams, duration: number = DEFAULT_MENU_DURATION,
     (backdropDuration: number = 300): void => {
       currentBackdropEl?.classList.add('fadeOut')
 
-      clearTimeout(hideBackdropTimer)
+      clearTimeout(hideBackdropTimer ?? undefined)
       setHideBackdropTimer(
         setTimeout(() => {
-          currentBackdropEl.hidden = true
-          currentBackdropEl.classList.remove('fadeOut')
+          currentBackdropEl!.hidden = true
+          currentBackdropEl!.classList.remove('fadeOut')
         }, backdropDuration)
       )
     },
@@ -237,25 +237,25 @@ const useAbMenu = (params: MenuParams, duration: number = DEFAULT_MENU_DURATION,
         hideBackdrop()
 
         // animate the menus container & the menu itself out of sight
-        currentMenusEl.classList.remove('fadeIn')
-        currentMenusEl.classList.add('fadeOut')
+        currentMenusEl!.classList.remove('fadeIn')
+        currentMenusEl!.classList.add('fadeOut')
 
         currentMenuEl.classList.remove('slideFromDown')
         currentMenuEl.classList.add('slideDown')
 
         // reset any pending show/hide timers before scheduling the hide
-        clearTimeout(hideMenuTimer)
-        clearTimeout(showMenuTimer)
+        clearTimeout(hideMenuTimer ?? undefined)
+        clearTimeout(showMenuTimer ?? undefined)
 
         setHideMenuTimer(
           setTimeout(() => {
             // deactivate & dispatch the onClose callback once hidden
             currentMenuEl.removeAttribute('data-active')
             currentMenuEl.hidden = true
-            currentMenusEl.hidden = true
+            currentMenusEl!.hidden = true
 
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            menuParams.onClose && menuParams.onClose(menuId, currentMenuEl)
+menuParams.onClose && menuParams.onClose(menuId, currentMenuEl!)
 
             resolve(true)
           }, hideDuration * 1000)
@@ -289,11 +289,11 @@ const useAbMenu = (params: MenuParams, duration: number = DEFAULT_MENU_DURATION,
 
         // unhide the menu & its container
         currentMenuEl.hidden = false
-        currentMenusEl.hidden = false
+        currentMenusEl!.hidden = false
 
         // animate everything back into view
-        currentMenusEl.classList.remove('fadeOut')
-        currentMenusEl.classList.add('fadeIn')
+        currentMenusEl!.classList.remove('fadeOut')
+        currentMenusEl!.classList.add('fadeIn')
 
         currentMenuEl.classList.remove('slideDown')
         currentMenuEl.classList.add('slideFromDown')
@@ -301,8 +301,8 @@ const useAbMenu = (params: MenuParams, duration: number = DEFAULT_MENU_DURATION,
         currentMenuEl.setAttribute('data-type', menuType)
 
         // reset any pending hide/show timers before scheduling the show
-        clearTimeout(showMenuTimer)
-        clearTimeout(hideMenuTimer)
+        clearTimeout(showMenuTimer ?? undefined)
+        clearTimeout(hideMenuTimer ?? undefined)
 
         setShowMenuTimer(
           setTimeout(() => {
@@ -338,13 +338,13 @@ const useAbMenu = (params: MenuParams, duration: number = DEFAULT_MENU_DURATION,
 
       // fire the user's `onItemClick` callback (if any) first
       if (menuParams.onItemClick) {
-        menuParams.onItemClick(menuItemId, menuItemEl, event)
+        menuParams.onItemClick(menuItemId!, menuItemEl, event)
       }
 
       // close the menu (after closing) if requested
       if (menuParams.closeOnItemClick) {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        menuParams.onClose && menuParams.onClose(menuId, currentMenuEl)
+        menuParams.onClose && menuParams.onClose(menuId, currentMenuEl!)
         closeHandler()
       }
     },
@@ -366,7 +366,7 @@ const useAbMenu = (params: MenuParams, duration: number = DEFAULT_MENU_DURATION,
       currentCloseBtnEl?.addEventListener('click', closeHandler)
 
       // every `.menu-item` gets the shared click handler
-      const menuItems: NodeListOf<HTMLLIElement> = currentMenuEl?.querySelectorAll('.menu-item')
+      const menuItems: NodeListOf<HTMLLIElement> | undefined = currentMenuEl?.querySelectorAll('.menu-item')
       menuItems?.forEach((menuItem: HTMLLIElement) => {
         menuItem.addEventListener('click', itemClickHandler)
       })
@@ -381,7 +381,7 @@ const useAbMenu = (params: MenuParams, duration: number = DEFAULT_MENU_DURATION,
 
       currentCloseBtnEl?.removeEventListener('click', openHandler)
 
-      const menuItems: NodeListOf<HTMLLIElement> = currentMenuEl?.querySelectorAll('.menu-item')
+      const menuItems: NodeListOf<HTMLLIElement> | undefined = currentMenuEl?.querySelectorAll('.menu-item')
       menuItems?.forEach((menuItem: HTMLLIElement) => {
         menuItem.removeEventListener('click', itemClickHandler)
       })

@@ -202,12 +202,12 @@ const useAbToast = (toastType: string = NORMAL_TOAST, emojiHidden: boolean = fal
 
   // kill both timers; used whenever a toast is done or the state resets
   const clearTimers = useCallback(() => {
-    clearTimeout(toastTimer)
-    clearTimeout(toastOutTimer)
+    clearTimeout(toastTimer ?? undefined)
+    clearTimeout(toastOutTimer ?? undefined)
   }, [toastTimer, toastOutTimer])
 
   // find the `.Toasts` container for a given part
-  const getToastsByPart = useCallback((part: string): HTMLDivElement => {
+  const getToastsByPart = useCallback((part: string): HTMLDivElement | null => {
     return document.querySelector(getToastsByPartSelector(part))
   }, [])
 
@@ -278,7 +278,7 @@ const useAbToast = (toastType: string = NORMAL_TOAST, emojiHidden: boolean = fal
         const part = params.part ?? 'full'
 
         // find (then clear) the target part's toasts container
-        const currentToastsEl = getToastsByPart(part)
+        const currentToastsEl = getToastsByPart(part)!
 
         clearToast(currentToastsEl)
 
@@ -288,7 +288,7 @@ const useAbToast = (toastType: string = NORMAL_TOAST, emojiHidden: boolean = fal
         // inject the toast HTML & grab the fresh element
         currentToastsEl.insertAdjacentHTML('beforeend', getToastHtmlTemplate(type, message))
 
-        const toastEl: HTMLDivElement = currentToastsEl.querySelector('.toast')
+        const toastEl: HTMLDivElement = currentToastsEl.querySelector('.toast')!
 
         currentToastsEl.hidden = false
 
@@ -328,7 +328,7 @@ const useAbToast = (toastType: string = NORMAL_TOAST, emojiHidden: boolean = fal
     show: showToast,
     hide: hideToast,
     toggle: toggleToast,
-    isToasting
+    isToasting: isToasting === true
   }
 
   // return the whole toast API

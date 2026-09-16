@@ -228,7 +228,7 @@ const useFilterLabels = (defaultFilterKeys: Array<string> = DEFAULT_FILTER_KEYS)
     // create the nested getter that resolves a single option inside a filter's `options` map;
     // note: falls back to the raw `option` key when nothing is found
     const getFilterOptionLabel = (filter: string, option: string, labels?: AbFilterLabels): string => {
-      const filterOptionLabel: string = (labels?.['options']?.[filter]?.[option] as string) ?? option
+      const filterOptionLabel: string = (labels?.['options']?.[filter as keyof AbFilterOptionLabels]?.[option] as string) ?? option
 
       // return the resolved option label (or the raw key fallback)
       return filterOptionLabel

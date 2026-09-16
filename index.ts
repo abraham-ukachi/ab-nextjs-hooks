@@ -133,6 +133,67 @@ const supportedHooks: Array<HookCatalogEntry> = [
 const abHooks = { supportedHooks }
 
 
+// ===== HOOK RE-EXPORTS ===== //
+
+// ---- core / ui hooks ----
+export { useAbTheme, DEFAULT_AB_THEME, type AbThemeResult } from './useAbTheme'
+export { useAbMenu } from './useAbMenu'
+export { useAbDialog } from './useAbDialog'
+export { useAbToast } from './useAbToast'
+export { useAbConfetti } from './useAbConfetti'
+
+// ---- data & storage hooks ----
+export { useAbDataIndexer } from './useAbDataIndexer'
+export { useAbDataMapper } from './useAbDataMapper'
+
+// ---- request hooks ----
+export { useBrandRequest } from './useAbBrandRequest'
+export { useCollectionRequest } from './useAbCollectionRequest'
+export { useFaqRequest } from './useAbFaqRequest'
+export { useFilterRequest } from './useAbFilterRequest'
+export { useProductRequest } from './useAbProductRequest'
+export { useAuthRequest } from './useAbAuthRequest'
+
+// ---- labels hooks ----
+export { useBrandLabels } from './useAbBrandLabels'
+export { useCollectionLabels } from './useAbCollectionLabels'
+export { useColorLabels } from './useAbColorLabels'
+export { useAbColorHexes } from './useAbColorHexes'
+export { useCountryLabels } from './useAbCountryLabels'
+export { useFilterLabels } from './useAbFilterLabels'
+export { useGenderLabels } from './useAbGenderLabels'
+export { useLensLabels } from './useAbLensLabels'
+export { useMaterialLabels } from './useAbMaterialLabels'
+export { usePriceLabels } from './useAbPriceLabels'
+export { useShapeLabels } from './useAbShapeLabels'
+export { useBranchLabels } from './useAbBranchLabels'
+export { useBridgeLabels } from './useAbBridgeLabels'
+export { useProductLabels } from './useAbProductLabels'
+
+// ---- brand / product extras ----
+export { useBrand } from './useAbBrand'
+export { useCollection } from './useAbCollection'
+export { useFilter } from './useAbFilter'
+export { useProduct } from './useAbProduct'
+export { useFaq } from './useAbFAQ'
+export { useBrandColors } from './useAbBrandColors'
+export { useAbProductCart } from './useAbProductCart'
+export { useAbProductLikes } from './useAbProductLikes'
+export { useAbProductDefaultQuantities } from './useAbProductDefaultQuantities'
+export { useAbUser } from './useAbUser'
+
+// ---- type exports (used across the demo playground) ----
+// note: `AbUser` is a type re-export from the server auth module; using
+// `export type` keeps it erased at build time (no server runtime import leaks
+// into client bundles)
+export type { AbUser } from './server/useAbAuth'
+export type { AbCart, AbCartItem, AbProductCartParams } from './useAbProductCart'
+export type { AbLikes, AbLikesItem, AbProductLikesParams } from './useAbProductLikes'
+export type { AbDataIndexerParams, AbObjectStoreConfig, AbObjectStoreIndexConfig } from './useAbDataIndexer'
+export type { AbDataMapperParams, AbDataMapperResult, AbMeta, AbMetaPagination, AbMapper } from './useAbDataMapper'
+export type { AbRequestError, AbRequestResponse, AbRequestParams, AbRequestEndpoints } from './helpers/useAbRequest'
+
+
 // export `supportedHooks` catalog as a named export
 export { supportedHooks }
 

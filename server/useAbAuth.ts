@@ -141,7 +141,7 @@ export const getAbUserToken = async (): Promise<string> => {
 
     // only grab the value when the token cookie actually exists
     if (cookieStore.has(TOKEN_COOKIE)) {
-      userToken = cookieStore.get(TOKEN_COOKIE).value
+      userToken = cookieStore.get(TOKEN_COOKIE)?.value ?? ''
     }
   } catch {
     return userToken
@@ -268,19 +268,23 @@ export const getAbUser = async (fromServer: boolean = false, apiUrl?: string): P
     // no token, no party
     if (!hasToken) return userData
 
-    userToken = cookieStore.get(TOKEN_COOKIE).value
+    userToken = cookieStore.get(TOKEN_COOKIE)?.value ?? ''
 
     // fetch fresh user data from the API, or fall back to the cached copy
     if (fromServer) {
       return fetchAbUserData(userToken, apiUrl)
     } else if (hasUserData) {
-      userData = JSON.parse(cookieStore.get(DATA_COOKIE).value)
+      const dataCookie = cookieStore.get(DATA_COOKIE)
+      if (dataCookie?.value) {
+        userData = JSON.parse(dataCookie.value) as AbUserData
+      }
     }
   } catch {
     return userData
   }
 
   // return the user data, with the token attached
+  if (!userData) return userData
   return { ...userData, token: userToken }
 }
 

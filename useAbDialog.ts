@@ -134,7 +134,7 @@ export interface AbDialogResult {
   isCancelled: boolean
   isOpening: boolean
   isClosing: boolean
-  currentId: string
+  currentId: string | null
   currentPart: AbDialogPart
   opened: boolean
   open: (params: DialogParams, timeout?: number, part?: AbDialogPart) => Promise<boolean | HTMLDivElement>
@@ -171,21 +171,21 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
   const [opened, toggleOpened] = useAbToggle(null)
 
   // --- current dialog identity states ---
-  const [currentId, setCurrentId] = useState<string>(null)
+  const [currentId, setCurrentId] = useState<string | null>(null)
   const [currentType, setCurrentType] = useState<string>(dialogType)
-  const [currentDialogsEl, setCurrentDialogsEl] = useState<HTMLDivElement>(null)
-  const [currentDialogEl, setCurrentDialogEl] = useState<HTMLDivElement>(null)
+  const [currentDialogsEl, setCurrentDialogsEl] = useState<HTMLDivElement | null>(null)
+  const [currentDialogEl, setCurrentDialogEl] = useState<HTMLDivElement | null>(null)
   const [currentPart, setCurrentPart] = useState<AbDialogPart>('full')
 
   // --- queried DOM containers (one per page slot) ---
-  const [mainEl, setMainEl] = useState<HTMLElement>(null)
-  const [asideEl, setAsideEl] = useState<HTMLElement>(null)
-  const [dialogsEl, setDialogsEl] = useState<HTMLDivElement>(null)
-  const [mainDialogsEl, setMainDialogsEl] = useState<HTMLDivElement>(null)
-  const [asideDialogsEl, setAsideDialogsEl] = useState<HTMLDivElement>(null)
-  const [backdropEl, setBackdropEl] = useState<HTMLDivElement>(null)
-  const [mainBackdropEl, setMainBackdropEl] = useState<HTMLDivElement>(null)
-  const [asideBackdropEl, setAsideBackdropEl] = useState<HTMLDivElement>(null)
+  const [mainEl, setMainEl] = useState<HTMLElement | null>(null)
+  const [asideEl, setAsideEl] = useState<HTMLElement | null>(null)
+  const [dialogsEl, setDialogsEl] = useState<HTMLDivElement | null>(null)
+  const [mainDialogsEl, setMainDialogsEl] = useState<HTMLDivElement | null>(null)
+  const [asideDialogsEl, setAsideDialogsEl] = useState<HTMLDivElement | null>(null)
+  const [backdropEl, setBackdropEl] = useState<HTMLDivElement | null>(null)
+  const [mainBackdropEl, setMainBackdropEl] = useState<HTMLDivElement | null>(null)
+  const [asideBackdropEl, setAsideBackdropEl] = useState<HTMLDivElement | null>(null)
 
   // --- animation timers ---
   const [hideBackdropTimer, setHideBackdropTimer] = useState<ReturnType<typeof setTimeout> | null>(null)
@@ -217,7 +217,7 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
 
   // return the dialogs container for a given part
   const getCurrentDialogsElement = useCallback(
-    (part: AbDialogPart = currentPart): HTMLDivElement => {
+    (part: AbDialogPart = currentPart): HTMLDivElement | null => {
       return part === 'main' ? mainDialogsEl : part === 'aside' ? asideDialogsEl : dialogsEl
     },
     [currentPart, mainDialogsEl, asideDialogsEl, dialogsEl]
@@ -225,8 +225,8 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
 
   // find a dialog element inside its container, by id (defaults to `currentId`)
   const getDialogById = useCallback(
-    (dialogId: string = currentId, part: AbDialogPart = currentPart): HTMLDivElement => {
-      return getCurrentDialogsElement(part).querySelector(`.dialog[data-id="${dialogId}"]`)
+    (dialogId: string | null = currentId, part: AbDialogPart = currentPart): HTMLDivElement | null => {
+      return getCurrentDialogsElement(part)?.querySelector(`.dialog[data-id="${dialogId}"]`) ?? null
     },
     [currentId, currentPart, getCurrentDialogsElement]
   )
@@ -288,7 +288,7 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
 
   // clear the `selected` attribute from every list item in a dialog
   const _clearDialogListSelection = useCallback(
-    (dialogEl: HTMLDivElement = currentDialogEl): void => {
+    (dialogEl: HTMLDivElement = currentDialogEl!): void => {
       const listItemEls = dialogEl.querySelectorAll('.dialog-list-item')
 
       listItemEls.forEach((listItemEl) => listItemEl.removeAttribute('selected'))
@@ -298,8 +298,8 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
 
   // mark a dialog list item as `selected` (by its numeric id)
   const _selectDialogListItemById = useCallback(
-    (listItemId: number, dialogEl: HTMLDivElement = currentDialogEl): void => {
-      const listItemEl: HTMLLIElement = dialogEl.querySelector(`[data-id="${listItemId}"]`)
+    (listItemId: number, dialogEl: HTMLDivElement = currentDialogEl!): void => {
+      const listItemEl: HTMLLIElement = dialogEl.querySelector(`[data-id="${listItemId}"]`)!
 
       listItemEl.setAttribute('selected', '')
     },
@@ -308,9 +308,9 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
 
   // shared handler: clicking a list item swaps the `selected` state (single-choice)
   const _handleDialogListItemClick = useCallback(
-    (event: ReactMouseEvent<HTMLLIElement>, dialogEl: HTMLDivElement = currentDialogEl): void => {
+    (event: ReactMouseEvent<HTMLLIElement>, dialogEl: HTMLDivElement = currentDialogEl!): void => {
       const listItemEl: HTMLLIElement = event.currentTarget
-      const listItemId: number = parseInt(listItemEl.dataset.id)
+      const listItemId: number = parseInt(listItemEl.dataset.id!)
 
       _clearDialogListSelection(dialogEl)
       _selectDialogListItemById(listItemId, dialogEl)
@@ -320,7 +320,7 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
 
   // attach click listeners to every list item (fires `callback` when provided)
   const _installDialogListItemEventListeners = useCallback(
-    (dialogEl: HTMLDivElement = currentDialogEl, callback: (event: ReactMouseEvent<HTMLLIElement>, listItemEl: HTMLLIElement) => void = null): void => {
+    (dialogEl: HTMLDivElement = currentDialogEl!, callback: ((event: ReactMouseEvent<HTMLLIElement>, listItemEl: HTMLLIElement) => void) | null = null): void => {
       const listItemEls: NodeListOf<HTMLLIElement> = dialogEl.querySelectorAll('.dialog-list-item')
 
       listItemEls.forEach((listItemEl: HTMLLIElement) => {
@@ -339,7 +339,7 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
   // reveal the backdrop of a given part (with its own cancelable flag)
   const showBackdropOf = useCallback(
     (part: AbDialogPart = currentPart, isCancelable: boolean = true): void => {
-      const currentBackdropEl: HTMLDivElement = part === 'main' ? mainBackdropEl : part === 'aside' ? asideBackdropEl : backdropEl
+      const currentBackdropEl: HTMLDivElement = (part === 'main' ? mainBackdropEl : part === 'aside' ? asideBackdropEl : backdropEl)!
 
       currentBackdropEl.setAttribute('cancelable', isCancelable.toString())
       currentBackdropEl.hidden = false
@@ -350,11 +350,11 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
   // fade a part's backdrop out, then hide it once the fade completes
   const hideBackdropOf = useCallback(
     (part: AbDialogPart = currentPart, backdropDuration: number = 300): void => {
-      const currentBackdropEl: HTMLDivElement = part === 'main' ? mainBackdropEl : part === 'aside' ? asideBackdropEl : backdropEl
+      const currentBackdropEl: HTMLDivElement = (part === 'main' ? mainBackdropEl : part === 'aside' ? asideBackdropEl : backdropEl)!
 
       currentBackdropEl.classList.add('fadeOut')
 
-      clearTimeout(hideBackdropTimer)
+      clearTimeout(hideBackdropTimer ?? undefined)
       setHideBackdropTimer(
         setTimeout(() => {
           currentBackdropEl.hidden = true
@@ -387,14 +387,14 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
         // hide the backdrop & animate the dialogs container + the dialog out
         hideBackdropOf(closePart)
 
-        currentDialogsEl.classList.remove('fadeIn')
-        currentDialogsEl.classList.add('fadeOut')
+        currentDialogsEl!.classList.remove('fadeIn')
+        currentDialogsEl!.classList.add('fadeOut')
 
         currentDialogEl.classList.remove('slideFromUp')
         currentDialogEl.classList.add('slideUp')
 
-        clearTimeout(closeDialogTimer)
-        clearTimeout(openDialogTimer)
+        clearTimeout(closeDialogTimer ?? undefined)
+        clearTimeout(openDialogTimer ?? undefined)
 
         setCloseDialogTimer(
           setTimeout(() => {
@@ -402,9 +402,9 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
             currentDialogEl.removeAttribute('opened')
             currentDialogEl.removeAttribute('active')
             currentDialogEl.hidden = true
-            currentDialogsEl.hidden = true
+            currentDialogsEl!.hidden = true
 
-            currentDialogsEl.classList.remove('fadeOut')
+            currentDialogsEl!.classList.remove('fadeOut')
             currentDialogEl.remove()
 
             toggleIsClosing(false)
@@ -419,10 +419,10 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
 
   // open a dialog: build it (if missing), wire its buttons, animate it in & resolve
   const open = useCallback(
-    (params: DialogParams, timeout: number = DEFAULT_DIALOG_TIMEOUT, part: AbDialogPart): Promise<boolean | HTMLDivElement> => {
+    (params: DialogParams, timeout: number = DEFAULT_DIALOG_TIMEOUT, part: AbDialogPart = 'full'): Promise<boolean | HTMLDivElement> => {
       const newDialogId: string = params?.id ?? 'dialog'
       const newDialogType: string = params?.type ?? DEFAULT_DIALOG
-      const newDialogsEl: HTMLDivElement = getDialogsElement(part)
+      const newDialogsEl: HTMLDivElement = getDialogsElement(part)!
 
       // remember what we're about to show
       setCurrentId(newDialogId)
@@ -431,7 +431,7 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
       setCurrentPart(part)
 
       // try to find an already-existing dialog of that id
-      let newDialogEl: HTMLDivElement = getDialogElement(newDialogsEl)
+      let newDialogEl: HTMLDivElement | null = getDialogElement(newDialogsEl)
 
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       newDialogEl && setCurrentDialogEl(newDialogEl)
@@ -448,15 +448,15 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
           // inject the HTML into the container then re-query it
           newDialogsEl.insertAdjacentHTML('beforeend', dialogHTMLTemplate)
 
-          newDialogEl = newDialogsEl?.querySelector(`.dialog[data-id="${newDialogId}"]`)
+          newDialogEl = newDialogsEl?.querySelector(`.dialog[data-id="${newDialogId}"]`) ?? null
 
           setCurrentDialogEl(newDialogEl)
 
           // wire up the list items (selection & user callback) when a list exists
-          if (typeof params.list !== 'undefined') _installDialogListItemEventListeners(newDialogEl, params?.onListItemClick)
+          if (typeof params.list !== 'undefined') _installDialogListItemEventListeners(newDialogEl!, params?.onListItemClick)
 
-          const confirmBtnEl: HTMLButtonElement | HTMLAnchorElement = newDialogEl.querySelector('.confirm-btn')
-          const cancelBtnEl: HTMLButtonElement | HTMLAnchorElement = newDialogEl.querySelector('.cancel-btn')
+          const confirmBtnEl: HTMLButtonElement | HTMLAnchorElement = newDialogEl!.querySelector('.confirm-btn')!
+          const cancelBtnEl: HTMLButtonElement | HTMLAnchorElement = newDialogEl!.querySelector('.cancel-btn')!
 
           // wire the confirm button (default behavior = confirm + close)
           confirmBtnEl.onclick = params.onConfirm ?? ((): void => {
@@ -490,16 +490,16 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
         newDialogEl.classList.remove('slideUp')
         newDialogEl.classList.add('slideFromUp')
 
-        clearTimeout(closeDialogTimer)
-        clearTimeout(openDialogTimer)
+        clearTimeout(closeDialogTimer ?? undefined)
+        clearTimeout(openDialogTimer ?? undefined)
 
         setOpenDialogTimer(
           setTimeout(() => {
-            newDialogEl.setAttribute('opened', '')
+            newDialogEl!.setAttribute('opened', '')
 
             // move focus to the confirm/cancel buttons when requested
-            const confirmBtnEl: HTMLButtonElement | HTMLAnchorElement = newDialogEl.querySelector('.confirm-btn')
-            const cancelBtnEl: HTMLButtonElement | HTMLAnchorElement = newDialogEl.querySelector('.cancel-btn')
+            const confirmBtnEl: HTMLButtonElement | HTMLAnchorElement = newDialogEl!.querySelector('.confirm-btn')!
+            const cancelBtnEl: HTMLButtonElement | HTMLAnchorElement = newDialogEl!.querySelector('.cancel-btn')!
 
             if (params.focusOnConfirm) {
               confirmBtnEl.focus()
@@ -512,7 +512,7 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
             toggleIsCancelled(false)
             toggleIsOpening(false)
             toggleOpened(true)
-            resolve(newDialogEl)
+            resolve(newDialogEl!)
           }, timeout * 1000)
         )
       })
@@ -536,24 +536,24 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
   )
 
   // return the dialogs container for a given part (helpers used by `open`)
-  const getDialogsElement = (part: AbDialogPart): HTMLDivElement => {
+  const getDialogsElement = (part: AbDialogPart): HTMLDivElement | null => {
     return part === 'main' ? mainDialogsEl : part === 'aside' ? asideDialogsEl : dialogsEl
   }
 
   // find the dialog matching the current id inside a given container
-  const getDialogElement = (dialogsEl: HTMLDivElement): HTMLDivElement => {
-    return dialogsEl?.querySelector(`.dialog[data-id="${currentId}"]`)
+  const getDialogElement = (dialogsEl: HTMLDivElement | null): HTMLDivElement | null => {
+    return dialogsEl?.querySelector(`.dialog[data-id="${currentId}"]`) ?? null
   }
 
   // bundle everything the consumer needs into a single `dialogResult`
   const dialogResult: AbDialogResult = {
-    isConfirmed,
-    isCancelled,
-    isOpening,
-    isClosing,
+    isConfirmed: isConfirmed ?? false,
+    isCancelled: isCancelled ?? false,
+    isOpening: isOpening ?? false,
+    isClosing: isClosing ?? false,
     currentId,
     currentPart,
-    opened,
+    opened: opened ?? false,
     open,
     close
   }

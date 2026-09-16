@@ -225,7 +225,7 @@ const useFilterRequest = (params: UseFilterRequestParams = {}): UseFilterRequest
 
   // type-only shim that keeps the generic option fetcher's signature (no runtime change)
   const bindParams = (
-    fetcher: (p: FilterParams | null) => Promise<FilterOptionResponse>
+    fetcher: (p?: FilterParams | null) => Promise<FilterOptionResponse>
   ): ((p?: FilterParams | null) => Promise<FilterOptionResponse>) => fetcher
 
   // return the busy flags + typed fetchers, re-exposed under filter-specific names
