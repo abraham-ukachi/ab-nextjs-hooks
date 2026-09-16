@@ -31,6 +31,8 @@
 
 > IMPORTANT: This is a work in progress and subject to major changes until version 1.0.
 
+> Tooling target: **Next.js 16.3.4** / React 19 (local `chore/upgrade-next-16`).
+
 
 🪝 This is a lightweight collection of React hooks for abElements created by [Abraham Ukachi](https://github.com/abraham-ukachi), and optimized for [Next.js](https://nextjs.org/docs) applications 😎. 
 
@@ -61,11 +63,43 @@ A list of all the supported custom **hooks** and their current status:
 
 | No. | Name | File | Status |
 |:----|:-----|:-----|:-------|
-| 1 | *`useAbTheme`* | **useAbTheme.ts** | Pending |
-| 2 | *`useAbMenu`* | **useAbMenu.ts** | Pending |
-| 3 | *`useAbDialog`* | **useAbDialog.ts** | Pending |
-| 4 | *`useAbToast`* | **useAbToast.ts** | Pending |
-| 5 | *`useAbConfetti`* | **useAbConfetti.ts** | Pending |
+| 1 | *`useAbTheme`* | **useAbTheme.ts** | Done |
+| 2 | *`useAbMenu`* | **useAbMenu.ts** | Done |
+| 3 | *`useAbDialog`* | **useAbDialog.ts** | Done |
+| 4 | *`useAbToast`* | **useAbToast.ts** | Done |
+| 5 | *`useAbConfetti`* | **useAbConfetti.ts** | Done |
+| 6 | *`useAbDataIndexer`* | **useAbDataIndexer.ts** | Done |
+| 7 | *`useAbDataMapper`* | **useAbDataMapper.ts** | Done |
+| 8 | *`useAbBrand`* | **useAbBrand.ts** | Done |
+| 9 | *`useAbBrandRequest`* | **useAbBrandRequest.ts** | Done |
+| 10 | *`useAbBrandLabels`* | **useAbBrandLabels.ts** | Done |
+| 11 | *`useAbBrandColors`* | **useAbBrandColors.ts** | Done |
+| 12 | *`useAbCollection`* | **useAbCollection.ts** | Done |
+| 13 | *`useAbCollectionRequest`* | **useAbCollectionRequest.ts** | Done |
+| 14 | *`useAbCollectionLabels`* | **useAbCollectionLabels.ts** | Done |
+| 15 | *`useAbColorHexes`* | **useAbColorHexes.ts** | Done |
+| 16 | *`useAbColorLabels`* | **useAbColorLabels.ts** | Done |
+| 17 | *`useAbCountryLabels`* | **useAbCountryLabels.ts** | Done |
+| 18 | *`useAbFAQ`* | **useAbFAQ.ts** | Done |
+| 19 | *`useAbFaqRequest`* | **useAbFaqRequest.ts** | Done |
+| 20 | *`useAbFilter`* | **useAbFilter.ts** | Done |
+| 21 | *`useAbFilterRequest`* | **useAbFilterRequest.ts** | Done |
+| 22 | *`useAbFilterLabels`* | **useAbFilterLabels.ts** | Done |
+| 23 | *`useAbGenderLabels`* | **useAbGenderLabels.ts** | Done |
+| 24 | *`useAbLensLabels`* | **useAbLensLabels.ts** | Done |
+| 25 | *`useAbMaterialLabels`* | **useAbMaterialLabels.ts** | Done |
+| 26 | *`useAbPriceLabels`* | **useAbPriceLabels.ts** | Done |
+| 27 | *`useAbProduct`* | **useAbProduct.ts** | Done |
+| 28 | *`useAbProductRequest`* | **useAbProductRequest.ts** | Done |
+| 29 | *`useAbProductLabels`* | **useAbProductLabels.ts** | Done |
+| 30 | *`useAbProductCart`* | **useAbProductCart.ts** | Done |
+| 31 | *`useAbProductLikes`* | **useAbProductLikes.ts** | Done |
+| 32 | *`useAbProductDefaultQuantities`* | **useAbProductDefaultQuantities.ts** | Done |
+| 33 | *`useAbShapeLabels`* | **useAbShapeLabels.ts** | Done |
+| 34 | *`useAbBranchLabels`* | **useAbBranchLabels.ts** | Done |
+| 35 | *`useAbBridgeLabels`* | **useAbBridgeLabels.ts** | Done |
+| 36 | *`useAbUser`* | **useAbUser.ts** | Done |
+| 37 | *`useAbAuthRequest`* | **useAbAuthRequest.ts** | Done |
 
 
 > NOTE:
@@ -78,9 +112,9 @@ A list of all the supported custom **hooks** and their current status:
 
 | No. | Name | File | Status |
 |:----|:-----|:-----|:-------|
-| 1 | *`useAbApp`* | **server/useAbApp.ts** | Pending |
-| 2 | *`useAbAuth`* | **server/useAbAuth.ts** | Pending |
-| 3 | *`useAbNavLinks`* | **server/useAbNavLinks.ts** | Pending |
+| 1 | *`useAbApp`* | **server/useAbApp.ts** | Done |
+| 2 | *`useAbAuth`* | **server/useAbAuth.ts** | Done |
+| 3 | *`useAbNavLinks`* | **server/useAbNavLinks.ts** | Done |
 
 
 
