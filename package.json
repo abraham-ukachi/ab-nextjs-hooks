@@ -68,6 +68,14 @@
       "types": "./server/*.ts",
       "default": "./server/*.ts"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./helpers/useAbToggle": {
+      "types": "./helpers/useAbToggle.ts",
+      "default": "./helpers/useAbToggle.ts"
+    },
+    "./helpers/*": {
+      "types": "./helpers/*.ts",
+      "default": "./helpers/*.ts"
+    }
   }
 }
