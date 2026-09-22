@@ -106,22 +106,29 @@ export interface AbThemeInterface {
  */
 const useAbTheme: AbThemeInterface = (initialTheme: string = DEFAULT_AB_THEME): AbThemeResult => {
 
-  // note: grab the saved theme once, on the client, before the very first render
-  if (typeof window !== 'undefined') {
-    initialTheme = window.localStorage.getItem('abTheme') ?? initialTheme
-  }
-
-  // create the `theme` state, seeded with `initialTheme` (or the saved one)
+  // SSR-safe: seed with the prop only — never touch localStorage during render
   const [theme, setTheme] = useState(initialTheme)
+  const [hydrated, setHydrated] = useState(false)
 
-  // persist theme changes: save to `localStorage` & stamp it on the document body
+  // after mount, read any saved theme once (avoids hydration mismatch)
   useEffect(() => {
     if (typeof window === 'undefined') return
+    const saved = window.localStorage.getItem('abTheme')
+    if (saved && saved !== theme) {
+      setTheme(saved)
+    }
+    setHydrated(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional one-shot client hydrate
+  }, [])
+
+  // persist theme changes after hydration: save to localStorage & stamp body[data-theme]
+  useEffect(() => {
+    if (typeof window === 'undefined' || !hydrated) return
 
     window.localStorage.setItem('abTheme', theme)
     window.document.body.dataset.theme = theme
 
-  }, [theme])
+  }, [theme, hydrated])
 
   // create `updateTheme` as a wrapper over `setTheme`
   const updateTheme = (theme: string): void => {

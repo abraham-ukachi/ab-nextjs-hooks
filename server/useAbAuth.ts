@@ -1,3 +1,5 @@
+'use server'
+
 /* 
 * @license MIT
 * ~~~~~~~~~~~~
@@ -220,15 +222,20 @@ export const createAbUserByToken = async (token: string, userData: AbUserData = 
       path: '/',
       sameSite: 'strict',
       secure: true,
+      httpOnly: true,
       expires: new Date(Date.now() + COOKIE_MAX_AGE_MS)
     })
 
     // persist (a cached copy of) the user data, when provided
+    // cache user on the server only (httpOnly) — never expose full user JSON to JS
     if (userData) {
-      cookieStore.set(DATA_COOKIE, JSON.stringify(userData), {
+      const safeUser = { ...userData }
+      delete (safeUser as { token?: string }).token
+      cookieStore.set(DATA_COOKIE, JSON.stringify(safeUser), {
         path: '/',
         sameSite: 'strict',
         secure: true,
+        httpOnly: true,
         expires: new Date(Date.now() + COOKIE_MAX_AGE_MS)
       })
     }
