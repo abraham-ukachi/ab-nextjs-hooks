@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 * Smoke test asserts package version **0.1.2**
 * Short barrel names are canonical (`useBrand`, `useFaq`, …); `useAb*` aliases retained
-* `'use server'` on cookie-mutating server modules (`useAbApp`, `useAbAuth`)
+* Cookie-mutating server actions live in `server/*.actions.ts` (`'use server'`); sync `useAbApp` / `useAbAuth` stay plain modules (fixes "Server Actions must be async functions")
 * `useAbTheme` hydrates from `localStorage` in `useEffect` (no render-time access)
 * Auth token + cached user cookies are **httpOnly**; user JSON no longer readable from JS
 * `package.json` `exports` + `files`; removed `peerDependenciesMeta` optional flags for next/react/react-dom
