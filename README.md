@@ -31,7 +31,10 @@
 
 > IMPORTANT: This is a work in progress and subject to major changes until version 1.0.
 
-> Tooling target: **Next.js 16.3.4** / React 19 (local `chore/upgrade-next-16`).
+> Current release: **0.1.2** on `main`. Tooling target: **Next.js 16.3.4** / React 19.
+
+> Canonical client hook names are the **short** barrel exports (`useBrand`, `useFaq`, …).
+> `useAb*` aliases are also exported for compatibility.
 
 
 🪝 This is a lightweight collection of React hooks for abElements created by [Abraham Ukachi](https://github.com/abraham-ukachi), and optimized for [Next.js](https://nextjs.org/docs) applications 😎. 
@@ -70,36 +73,36 @@ A list of all the supported custom **hooks** and their current status:
 | 5 | *`useAbConfetti`* | **useAbConfetti.ts** | Done |
 | 6 | *`useAbDataIndexer`* | **useAbDataIndexer.ts** | Done |
 | 7 | *`useAbDataMapper`* | **useAbDataMapper.ts** | Done |
-| 8 | *`useAbBrand`* | **useAbBrand.ts** | Done |
-| 9 | *`useAbBrandRequest`* | **useAbBrandRequest.ts** | Done |
-| 10 | *`useAbBrandLabels`* | **useAbBrandLabels.ts** | Done |
-| 11 | *`useAbBrandColors`* | **useAbBrandColors.ts** | Done |
-| 12 | *`useAbCollection`* | **useAbCollection.ts** | Done |
-| 13 | *`useAbCollectionRequest`* | **useAbCollectionRequest.ts** | Done |
-| 14 | *`useAbCollectionLabels`* | **useAbCollectionLabels.ts** | Done |
+| 8 | *`useBrand`* (`useAbBrand`) | **useAbBrand.ts** | Done |
+| 9 | *`useBrandRequest`* (`useAbBrandRequest`) | **useAbBrandRequest.ts** | Done |
+| 10 | *`useBrandLabels`* (`useAbBrandLabels`) | **useAbBrandLabels.ts** | Done |
+| 11 | *`useBrandColors`* (`useAbBrandColors`) | **useAbBrandColors.ts** | Done |
+| 12 | *`useCollection`* (`useAbCollection`) | **useAbCollection.ts** | Done |
+| 13 | *`useCollectionRequest`* (`useAbCollectionRequest`) | **useAbCollectionRequest.ts** | Done |
+| 14 | *`useCollectionLabels`* (`useAbCollectionLabels`) | **useAbCollectionLabels.ts** | Done |
 | 15 | *`useAbColorHexes`* | **useAbColorHexes.ts** | Done |
-| 16 | *`useAbColorLabels`* | **useAbColorLabels.ts** | Done |
-| 17 | *`useAbCountryLabels`* | **useAbCountryLabels.ts** | Done |
-| 18 | *`useAbFAQ`* | **useAbFAQ.ts** | Done |
-| 19 | *`useAbFaqRequest`* | **useAbFaqRequest.ts** | Done |
-| 20 | *`useAbFilter`* | **useAbFilter.ts** | Done |
-| 21 | *`useAbFilterRequest`* | **useAbFilterRequest.ts** | Done |
-| 22 | *`useAbFilterLabels`* | **useAbFilterLabels.ts** | Done |
-| 23 | *`useAbGenderLabels`* | **useAbGenderLabels.ts** | Done |
-| 24 | *`useAbLensLabels`* | **useAbLensLabels.ts** | Done |
-| 25 | *`useAbMaterialLabels`* | **useAbMaterialLabels.ts** | Done |
-| 26 | *`useAbPriceLabels`* | **useAbPriceLabels.ts** | Done |
-| 27 | *`useAbProduct`* | **useAbProduct.ts** | Done |
-| 28 | *`useAbProductRequest`* | **useAbProductRequest.ts** | Done |
-| 29 | *`useAbProductLabels`* | **useAbProductLabels.ts** | Done |
+| 16 | *`useColorLabels`* (`useAbColorLabels`) | **useAbColorLabels.ts** | Done |
+| 17 | *`useCountryLabels`* (`useAbCountryLabels`) | **useAbCountryLabels.ts** | Done |
+| 18 | *`useFaq`* (`useAbFAQ`) | **useAbFAQ.ts** | Done |
+| 19 | *`useFaqRequest`* (`useAbFaqRequest`) | **useAbFaqRequest.ts** | Done |
+| 20 | *`useFilter`* (`useAbFilter`) | **useAbFilter.ts** | Done |
+| 21 | *`useFilterRequest`* (`useAbFilterRequest`) | **useAbFilterRequest.ts** | Done |
+| 22 | *`useFilterLabels`* (`useAbFilterLabels`) | **useAbFilterLabels.ts** | Done |
+| 23 | *`useGenderLabels`* (`useAbGenderLabels`) | **useAbGenderLabels.ts** | Done |
+| 24 | *`useLensLabels`* (`useAbLensLabels`) | **useAbLensLabels.ts** | Done |
+| 25 | *`useMaterialLabels`* (`useAbMaterialLabels`) | **useAbMaterialLabels.ts** | Done |
+| 26 | *`usePriceLabels`* (`useAbPriceLabels`) | **useAbPriceLabels.ts** | Done |
+| 27 | *`useProduct`* (`useAbProduct`) | **useAbProduct.ts** | Done |
+| 28 | *`useProductRequest`* (`useAbProductRequest`) | **useAbProductRequest.ts** | Done |
+| 29 | *`useProductLabels`* (`useAbProductLabels`) | **useAbProductLabels.ts** | Done |
 | 30 | *`useAbProductCart`* | **useAbProductCart.ts** | Done |
 | 31 | *`useAbProductLikes`* | **useAbProductLikes.ts** | Done |
 | 32 | *`useAbProductDefaultQuantities`* | **useAbProductDefaultQuantities.ts** | Done |
-| 33 | *`useAbShapeLabels`* | **useAbShapeLabels.ts** | Done |
-| 34 | *`useAbBranchLabels`* | **useAbBranchLabels.ts** | Done |
-| 35 | *`useAbBridgeLabels`* | **useAbBridgeLabels.ts** | Done |
+| 33 | *`useShapeLabels`* (`useAbShapeLabels`) | **useAbShapeLabels.ts** | Done |
+| 34 | *`useBranchLabels`* (`useAbBranchLabels`) | **useAbBranchLabels.ts** | Done |
+| 35 | *`useBridgeLabels`* (`useAbBridgeLabels`) | **useAbBridgeLabels.ts** | Done |
 | 36 | *`useAbUser`* | **useAbUser.ts** | Done |
-| 37 | *`useAbAuthRequest`* | **useAbAuthRequest.ts** | Done |
+| 37 | *`useAuthRequest`* (`useAbAuthRequest`) | **useAbAuthRequest.ts** | Done |
 
 
 > NOTE:

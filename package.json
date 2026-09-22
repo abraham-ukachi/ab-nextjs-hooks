@@ -1,7 +1,7 @@
 {
   "name": "ab-nextjs-hooks",
   "version": "0.1.2",
-  "description": "🪝 A lightweight collection of server & client React hooks for abElements created by Abraham Ukachi, and optimized for Next.js applications 😎.",
+  "description": "\ud83e\ude9d A lightweight collection of server & client React hooks for abElements created by Abraham Ukachi, and optimized for Next.js applications \ud83d\ude0e.",
   "type": "module",
   "main": "index.ts",
   "types": "types/index.d.ts",
@@ -37,17 +37,6 @@
     "react": "^19",
     "react-dom": "^19"
   },
-  "peerDependenciesMeta": {
-    "next": {
-      "optional": true
-    },
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    }
-  },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^19",
@@ -59,5 +48,26 @@
     "standard-version": "^9.5.0",
     "typescript": "^5",
     "vitest": "^3"
+  },
+  "files": [
+    "index.ts",
+    "types",
+    "helpers",
+    "server",
+    "useAb*.ts",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./index.ts"
+    },
+    "./server/*": {
+      "types": "./server/*.ts",
+      "default": "./server/*.ts"
+    },
+    "./package.json": "./package.json"
   }
 }

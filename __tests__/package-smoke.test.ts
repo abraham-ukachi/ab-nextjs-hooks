@@ -89,7 +89,7 @@ describe('ab-nextjs-hooks package smoke', () => {
 
     // assert the package name & version
     expect(pkg.name).toBe('ab-nextjs-hooks')
-    expect(pkg.version).toBe('0.1.1')
+    expect(pkg.version).toBe('0.1.2')
 
     // assert the Next.js peer dependency
     expect(pkg.peerDependencies.next).toBe('16.3.4')

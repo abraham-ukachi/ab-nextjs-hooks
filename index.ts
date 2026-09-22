@@ -91,36 +91,36 @@ const supportedHooks: Array<HookCatalogEntry> = [
   { name: 'useAbDataIndexer', file: 'useAbDataIndexer.ts', kind: 'client', status: 'Done' },
   { name: 'useAbDataMapper', file: 'useAbDataMapper.ts', kind: 'client', status: 'Done' },
 
-  { name: 'useAbBrand', file: 'useAbBrand.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbBrandRequest', file: 'useAbBrandRequest.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbBrandLabels', file: 'useAbBrandLabels.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbBrandColors', file: 'useAbBrandColors.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbCollection', file: 'useAbCollection.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbCollectionRequest', file: 'useAbCollectionRequest.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbCollectionLabels', file: 'useAbCollectionLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'useBrand', file: 'useAbBrand.ts', kind: 'client', status: 'Done' },
+  { name: 'useBrandRequest', file: 'useAbBrandRequest.ts', kind: 'client', status: 'Done' },
+  { name: 'useBrandLabels', file: 'useAbBrandLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'useBrandColors', file: 'useAbBrandColors.ts', kind: 'client', status: 'Done' },
+  { name: 'useCollection', file: 'useAbCollection.ts', kind: 'client', status: 'Done' },
+  { name: 'useCollectionRequest', file: 'useAbCollectionRequest.ts', kind: 'client', status: 'Done' },
+  { name: 'useCollectionLabels', file: 'useAbCollectionLabels.ts', kind: 'client', status: 'Done' },
   { name: 'useAbColorHexes', file: 'useAbColorHexes.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbColorLabels', file: 'useAbColorLabels.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbCountryLabels', file: 'useAbCountryLabels.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbFAQ', file: 'useAbFAQ.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbFaqRequest', file: 'useAbFaqRequest.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbFilter', file: 'useAbFilter.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbFilterRequest', file: 'useAbFilterRequest.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbFilterLabels', file: 'useAbFilterLabels.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbGenderLabels', file: 'useAbGenderLabels.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbLensLabels', file: 'useAbLensLabels.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbMaterialLabels', file: 'useAbMaterialLabels.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbPriceLabels', file: 'useAbPriceLabels.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbProduct', file: 'useAbProduct.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbProductRequest', file: 'useAbProductRequest.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbProductLabels', file: 'useAbProductLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'useColorLabels', file: 'useAbColorLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'useCountryLabels', file: 'useAbCountryLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'useFaq', file: 'useAbFAQ.ts', kind: 'client', status: 'Done' },
+  { name: 'useFaqRequest', file: 'useAbFaqRequest.ts', kind: 'client', status: 'Done' },
+  { name: 'useFilter', file: 'useAbFilter.ts', kind: 'client', status: 'Done' },
+  { name: 'useFilterRequest', file: 'useAbFilterRequest.ts', kind: 'client', status: 'Done' },
+  { name: 'useFilterLabels', file: 'useAbFilterLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'useGenderLabels', file: 'useAbGenderLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'useLensLabels', file: 'useAbLensLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'useMaterialLabels', file: 'useAbMaterialLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'usePriceLabels', file: 'useAbPriceLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'useProduct', file: 'useAbProduct.ts', kind: 'client', status: 'Done' },
+  { name: 'useProductRequest', file: 'useAbProductRequest.ts', kind: 'client', status: 'Done' },
+  { name: 'useProductLabels', file: 'useAbProductLabels.ts', kind: 'client', status: 'Done' },
   { name: 'useAbProductCart', file: 'useAbProductCart.ts', kind: 'client', status: 'Done' },
   { name: 'useAbProductLikes', file: 'useAbProductLikes.ts', kind: 'client', status: 'Done' },
   { name: 'useAbProductDefaultQuantities', file: 'useAbProductDefaultQuantities.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbShapeLabels', file: 'useAbShapeLabels.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbBranchLabels', file: 'useAbBranchLabels.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbBridgeLabels', file: 'useAbBridgeLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'useShapeLabels', file: 'useAbShapeLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'useBranchLabels', file: 'useAbBranchLabels.ts', kind: 'client', status: 'Done' },
+  { name: 'useBridgeLabels', file: 'useAbBridgeLabels.ts', kind: 'client', status: 'Done' },
   { name: 'useAbUser', file: 'useAbUser.ts', kind: 'client', status: 'Done' },
-  { name: 'useAbAuthRequest', file: 'useAbAuthRequest.ts', kind: 'client', status: 'Done' },
+  { name: 'useAuthRequest', file: 'useAbAuthRequest.ts', kind: 'client', status: 'Done' },
 
   // ------ SERVER hooks (run on the server only) ------
   { name: 'useAbApp', file: 'server/useAbApp.ts', kind: 'server', status: 'Done' },
@@ -193,6 +193,40 @@ export type { AbDataIndexerParams, AbObjectStoreConfig, AbObjectStoreIndexConfig
 export type { AbDataMapperParams, AbDataMapperResult, AbMeta, AbMetaPagination, AbMapper } from './useAbDataMapper'
 export type { AbRequestError, AbRequestResponse, AbRequestParams, AbRequestEndpoints } from './helpers/useAbRequest'
 
+
+
+// ---- aliases: short names are canonical; useAb* kept for compatibility ----
+export { useBrand as useAbBrand } from './useAbBrand'
+export { useBrandRequest as useAbBrandRequest } from './useAbBrandRequest'
+export { useBrandLabels as useAbBrandLabels } from './useAbBrandLabels'
+export { useBrandColors as useAbBrandColors } from './useAbBrandColors'
+export { useCollection as useAbCollection } from './useAbCollection'
+export { useCollectionRequest as useAbCollectionRequest } from './useAbCollectionRequest'
+export { useCollectionLabels as useAbCollectionLabels } from './useAbCollectionLabels'
+export { useColorLabels as useAbColorLabels } from './useAbColorLabels'
+export { useCountryLabels as useAbCountryLabels } from './useAbCountryLabels'
+export { useFaq as useAbFAQ } from './useAbFAQ'
+export { useFaq as useAbFaq } from './useAbFAQ'
+export { useFaqRequest as useAbFaqRequest } from './useAbFaqRequest'
+export { useFilter as useAbFilter } from './useAbFilter'
+export { useFilterRequest as useAbFilterRequest } from './useAbFilterRequest'
+export { useFilterLabels as useAbFilterLabels } from './useAbFilterLabels'
+export { useGenderLabels as useAbGenderLabels } from './useAbGenderLabels'
+export { useLensLabels as useAbLensLabels } from './useAbLensLabels'
+export { useMaterialLabels as useAbMaterialLabels } from './useAbMaterialLabels'
+export { usePriceLabels as useAbPriceLabels } from './useAbPriceLabels'
+export { useProduct as useAbProduct } from './useAbProduct'
+export { useProductRequest as useAbProductRequest } from './useAbProductRequest'
+export { useProductLabels as useAbProductLabels } from './useAbProductLabels'
+export { useShapeLabels as useAbShapeLabels } from './useAbShapeLabels'
+export { useBranchLabels as useAbBranchLabels } from './useAbBranchLabels'
+export { useBridgeLabels as useAbBridgeLabels } from './useAbBridgeLabels'
+export { useAuthRequest as useAbAuthRequest } from './useAbAuthRequest'
+export { useAbTheme as useTheme } from './useAbTheme'
+export { useAbMenu as useMenu } from './useAbMenu'
+export { useAbDialog as useDialog } from './useAbDialog'
+export { useAbToast as useToast } from './useAbToast'
+export { useAbConfetti as useConfetti } from './useAbConfetti'
 
 // export `supportedHooks` catalog as a named export
 export { supportedHooks }
