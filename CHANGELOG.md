@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.3 (2026-10-03)
+
+* Publish to npm automatically from GitHub Actions with Trusted Publishing (OIDC + provenance, no NPM_TOKEN)
+* Ship only package files via `files`; `next` peer is now `^16.3.4`
+* Export `./helpers/*` and `./helpers/useAbToggle` for deep imports (already in the published 0.1.2 tarball)
+
 ### 0.1.2 (2026-09-17)
 
 * Next.js **16.3.4** / React 19 peers and eslint-config-next flat config
