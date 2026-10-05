@@ -64,6 +64,8 @@ import { useCallback, useMemo, useState } from 'react'
 // AB types
 // AB hooks
 import { useAbToggle } from './helpers/useAbToggle'
+import { abTextOrHtml } from './helpers/escapeAbHtml'
+import { getAbPartElement } from './helpers/abPartSelectors'
 // AB components
 
 
@@ -130,6 +132,10 @@ export interface ToastParams {
   message: string
   type?: string
   part?: string
+  /**
+   * When true, `message` is inserted as HTML. Default `false`: escaped (XSS-safe).
+   */
+  html?: boolean
 }
 
 
@@ -166,14 +172,6 @@ const getCurrentEmoji = (toastType: string): string => {
 }
 
 
-// turn a toast part into a CSS selector for its `.Toasts` container
-const getToastsByPartSelector = (part: string): string => {
-  return part === 'main' ? 'main .Toasts' : part === 'aside' ? 'aside .Toasts' : '#toasts'
-}
-
-
-
-
 // ===== useAbToast - AB HOOK ===== //
 
 
@@ -206,9 +204,9 @@ const useAbToast = (toastType: string = NORMAL_TOAST, emojiHidden: boolean = fal
     clearTimeout(toastOutTimer ?? undefined)
   }, [toastTimer, toastOutTimer])
 
-  // find the `.Toasts` container for a given part
+  // find the `.Toasts` container for a given part (aside = AbAsideLayout only)
   const getToastsByPart = useCallback((part: string): HTMLDivElement | null => {
-    return document.querySelector(getToastsByPartSelector(part))
+    return getAbPartElement(part, 'Toasts') as HTMLDivElement | null
   }, [])
 
   // empty a toasts container & hide it
@@ -225,7 +223,7 @@ const useAbToast = (toastType: string = NORMAL_TOAST, emojiHidden: boolean = fal
       return new Promise((resolve) => {
         setToastOutTimer(
           setTimeout(() => {
-            toastEl.classList.remove('animate-[popIn_300ms_ease-in-out]')
+            toastEl.classList.remove('popIn')
             toastEl.classList.add('fadeOut')
             resolve(true)
           }, realTimeout)
@@ -235,15 +233,17 @@ const useAbToast = (toastType: string = NORMAL_TOAST, emojiHidden: boolean = fal
     []
   )
 
-  // build the raw HTML string of a toast (emoji included unless hidden)
+  // build the HTML string of a toast (emoji included unless hidden).
+  // `message` is escaped unless `allowHtml` is true.
   const getToastHtmlTemplate = useCallback(
-    (type: string, message: string) => {
+    (type: string, message: string, allowHtml: boolean = false) => {
       const emoji = getCurrentEmoji(type)
+      const safeMessage = abTextOrHtml(message, allowHtml)
 
       return `
-        <div class="toast animate-[popIn_300ms_ease-in-out]" ${emojiHidden ? 'data-emoji-hidden' : ''}>
+        <div class="toast popIn" ${emojiHidden ? 'data-emoji-hidden' : ''}>
           <span class="toast-emoji ${type}" ${emojiHidden && type !== SUCCESS_TOAST ? 'hidden' : ''}>${emojiHidden ? '' : emoji}</span>
-          <span class="toast-msg">${message}</span>
+          <span class="toast-msg">${safeMessage}</span>
         </div>
       `
     },
@@ -286,7 +286,7 @@ const useAbToast = (toastType: string = NORMAL_TOAST, emojiHidden: boolean = fal
         toggleIsToasting(true)
 
         // inject the toast HTML & grab the fresh element
-        currentToastsEl.insertAdjacentHTML('beforeend', getToastHtmlTemplate(type, message))
+        currentToastsEl.insertAdjacentHTML('beforeend', getToastHtmlTemplate(type, message, params.html === true))
 
         const toastEl: HTMLDivElement = currentToastsEl.querySelector('.toast')!
 

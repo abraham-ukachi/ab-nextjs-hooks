@@ -64,6 +64,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 // AB types
 // AB hooks
 import { useAbToggle } from './helpers/useAbToggle'
+import { getAbPartElement } from './helpers/abPartSelectors'
 // AB components
 
 
@@ -168,14 +169,14 @@ const useAbMenu = (params: MenuParams, duration: number = DEFAULT_MENU_DURATION,
   useEffect(() => {
     if (typeof document === 'undefined') return
 
-    // grab the container elements (by id & by part-specific selectors)
-    const menusEl = document.getElementById('menus') as HTMLDivElement
-    const mainMenusEl = document.querySelector('main > .Menus') as HTMLDivElement
-    const asideMenusEl = document.querySelector('aside > .Menus') as HTMLDivElement
+    // grab the container elements (aside = AbAsideLayout only, never a sidebar <nav>)
+    const menusEl = getAbPartElement('full', 'Menus') as HTMLDivElement
+    const mainMenusEl = getAbPartElement('main', 'Menus') as HTMLDivElement
+    const asideMenusEl = getAbPartElement('aside', 'Menus') as HTMLDivElement
 
-    const backdropEl = document.getElementById('backdrop') as HTMLDivElement
-    const mainBackdropEl = document.querySelector('main > .Backdrop') as HTMLDivElement
-    const asideBackdropEl = document.querySelector('aside > .Backdrop') as HTMLDivElement
+    const backdropEl = getAbPartElement('full', 'Backdrop') as HTMLDivElement
+    const mainBackdropEl = getAbPartElement('main', 'Backdrop') as HTMLDivElement
+    const asideBackdropEl = getAbPartElement('aside', 'Backdrop') as HTMLDivElement
 
     // pick the elements matching our current part & menu id
     setCurrentMenusEl((currentPart === 'main' ? mainMenusEl : currentPart === 'aside' ? asideMenusEl : menusEl) as HTMLDivElement)
