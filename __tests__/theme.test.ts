@@ -8,7 +8,7 @@ import {
 
 describe('useAbTheme storage + document', () => {
   beforeEach(() => {
-    localStorage.clear()
+    window.localStorage.clear()
     document.documentElement.className = ''
     delete document.documentElement.dataset.theme
     document.documentElement.style.colorScheme = ''
@@ -25,10 +25,10 @@ describe('useAbTheme storage + document', () => {
 
   it('reads `theme`, migrates legacy `abTheme`, and falls back', () => {
     expect(readAbThemeFromStorage('light')).toBe('light')
-    localStorage.setItem(AB_THEME_LEGACY_STORAGE_KEY, 'dark')
+    window.localStorage.setItem(AB_THEME_LEGACY_STORAGE_KEY, 'dark')
     expect(readAbThemeFromStorage()).toBe('dark')
-    expect(localStorage.getItem(AB_THEME_STORAGE_KEY)).toBe('dark')
-    localStorage.setItem(AB_THEME_STORAGE_KEY, 'light')
+    expect(window.localStorage.getItem(AB_THEME_STORAGE_KEY)).toBe('dark')
+    window.localStorage.setItem(AB_THEME_STORAGE_KEY, 'light')
     expect(readAbThemeFromStorage()).toBe('light')
   })
 })
