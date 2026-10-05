@@ -136,10 +136,32 @@ const abHooks = { supportedHooks }
 // ===== HOOK RE-EXPORTS ===== //
 
 // ---- core / ui hooks ----
-export { useAbTheme, DEFAULT_AB_THEME, type AbThemeResult } from './useAbTheme'
+export {
+  useAbTheme,
+  DEFAULT_AB_THEME,
+  AB_THEME_STORAGE_KEY,
+  AB_THEME_LEGACY_STORAGE_KEY,
+  applyAbThemeToDocument,
+  readAbThemeFromStorage,
+  type AbThemeResult,
+} from './useAbTheme'
 export { useAbMenu } from './useAbMenu'
-export { useAbDialog } from './useAbDialog'
-export { useAbToast } from './useAbToast'
+export {
+  useAbDialog,
+  NORMAL_DIALOG,
+  DEFAULT_DIALOG,
+  DEFAULT_DIALOG_TIMEOUT,
+  type AbDialogPart,
+  type DialogList,
+  type DialogParams,
+  type AbDialogResult,
+  type AbDialog,
+} from './useAbDialog'
+export {
+  useAbToast,
+  type ToastParams,
+  type ToastCallback,
+} from './useAbToast'
 export { useAbConfetti } from './useAbConfetti'
 
 // ---- data & storage hooks ----
