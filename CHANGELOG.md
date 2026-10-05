@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.4 (2026-10-05)
+
+* **Dialogs:** target `aside.AbAsideLayout` / `aside[data-ab-part="aside"]` (never the first `<aside>` / a sidebar)
+* **Dialogs:** a cancelable backdrop click closes the dialog; `onConfirm` / `onCancel` run **then** close (return `false` to keep it open)
+* **Dialogs / toasts:** text is escaped by default; pass `html: true` for trusted markup
+* **Exports:** `AbDialogPart`, `DialogParams`, `DialogList`, `AbDialogResult`, `ToastParams`, theme helpers
+* **Theme:** `useAbTheme` uses the `theme` key on `<html>` (class + `data-theme` + `color-scheme`), matching ab-elements-app's no-flash script; migrates legacy `abTheme` / `body[data-theme]` once
+* **Menus / toasts:** same aside-layout selector as dialogs; toast uses the `.popIn` class from `ab-nextjs-animations`
+
 ### 0.1.3 (2026-10-03)
 
 * Publish to npm automatically from GitHub Actions with Trusted Publishing (OIDC + provenance, no NPM_TOKEN)
