@@ -67,6 +67,8 @@ import type { MouseEvent as ReactMouseEvent } from 'react'
 // AB types
 // AB hooks
 import { useAbToggle } from './helpers/useAbToggle'
+import { abTextOrHtml } from './helpers/escapeAbHtml'
+import { AB_ASIDE_LAYOUT_SELECTOR, AB_MAIN_LAYOUT_SELECTOR, getAbPartElement } from './helpers/abPartSelectors'
 // AB components
 
 
@@ -113,10 +115,19 @@ export interface DialogParams {
   confirmBtnText?: string
   cancelBtnText?: string
   noDivider?: boolean
-  onConfirm?: () => void
-  onCancel?: () => void
+  /**
+   * Runs when the confirm button is clicked, **then** the dialog closes.
+   * Return `false` to keep the dialog open (the close is skipped).
+   */
+  onConfirm?: () => void | boolean | Promise<void | boolean>
+  /**
+   * Runs when the cancel button (or a cancelable backdrop) is clicked, **then** the dialog closes.
+   * Return `false` to keep the dialog open (the close is skipped).
+   */
+  onCancel?: () => void | boolean | Promise<void | boolean>
   noConfirmBtn?: boolean
   noCancelBtn?: boolean
+  /** When true (default), a click on the part's backdrop closes the dialog (after `onCancel`). */
   isCancelable?: boolean
   list?: Array<DialogList>
   selectedId?: number
@@ -125,6 +136,11 @@ export interface DialogParams {
   noButtons?: boolean
   focusOnConfirm?: boolean
   focusOnCancel?: boolean
+  /**
+   * When true, `title` / `message` / button labels / list values are inserted as HTML.
+   * Default `false`: they are escaped (XSS-safe). Prefer plain text or pass trusted markup only.
+   */
+  html?: boolean
 }
 
 
@@ -199,20 +215,20 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
     // grab the general `#dialogs` container
     setDialogsEl(document.getElementById('dialogs') as HTMLDivElement)
 
-    // grab the main slot (`main > .Dialogs`)
-    const newMainEl = document.querySelector('main') as HTMLElement
+    // grab the main slot (`main.AbMainLayout > .Dialogs`)
+    const newMainEl = document.querySelector(AB_MAIN_LAYOUT_SELECTOR) as HTMLElement
     setMainEl(newMainEl)
-    setMainDialogsEl(newMainEl?.querySelector(':scope > .Dialogs') as HTMLDivElement)
+    setMainDialogsEl(getAbPartElement('main', 'Dialogs') as HTMLDivElement)
 
-    // grab the aside slot (`aside > .Dialogs`)
-    const newAsideEl = document.querySelector('aside') as HTMLElement
+    // grab the aside layout only (`aside.AbAsideLayout`), never a sidebar <nav> / stray <aside>
+    const newAsideEl = document.querySelector(AB_ASIDE_LAYOUT_SELECTOR) as HTMLElement
     setAsideEl(newAsideEl)
-    setAsideDialogsEl(newAsideEl?.querySelector(':scope > .Dialogs') as HTMLDivElement)
+    setAsideDialogsEl(getAbPartElement('aside', 'Dialogs') as HTMLDivElement)
 
     // grab the backdrops, one per slot (general, main & aside)
     setBackdropEl(document.getElementById('backdrop') as HTMLDivElement)
-    setMainBackdropEl(newMainEl?.querySelector(':scope > .Backdrop') as HTMLDivElement)
-    setAsideBackdropEl(newAsideEl?.querySelector(':scope > .Backdrop') as HTMLDivElement)
+    setMainBackdropEl(getAbPartElement('main', 'Backdrop') as HTMLDivElement)
+    setAsideBackdropEl(getAbPartElement('aside', 'Backdrop') as HTMLDivElement)
   }, [mainEl, asideEl, currentDialogsEl])
 
   // return the dialogs container for a given part
@@ -231,13 +247,19 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
     [currentId, currentPart, getCurrentDialogsElement]
   )
 
-  // build the raw HTML string of a dialog from `DialogParams` (used for brand-new dialogs)
+  // build the HTML string of a dialog from `DialogParams` (used for brand-new dialogs).
+  // Text is escaped by default; pass `html: true` to allow trusted markup.
   const _getDialogHTMLTemplate = useCallback(
     (data: DialogParams, type: string = currentType): string => {
+      const t = (value: unknown) => abTextOrHtml(value, data.html)
+      const title = t(data.title ?? '')
+      const message = t(data.message ?? '')
+      const confirmLabel = t(data.confirmBtnText ?? 'Confirm')
+      const cancelLabel = t(data.cancelBtnText ?? 'Cancel')
       return `
         <div data-id="dialog" data-type="${type}" class="dialog slideFromUp" hidden ${typeof data?.list !== 'undefined' ? 'has-list' : ''}>
-          <h2 class="dialog-title" ${data.title?.length ?? 'hidden'}>${data.title}</h2>
-          <p class="dialog-msg" ${data.message?.length ?? 'hidden'}>${data.message}</p>
+          <h2 class="dialog-title" ${data.title?.length ? '' : 'hidden'}>${title}</h2>
+          <p class="dialog-msg" ${data.message?.length ? '' : 'hidden'}>${message}</p>
 
           ${typeof data?.list !== 'undefined'
             ? `
@@ -249,11 +271,11 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
               tabIndex="${index + 1}"
               class="dialog-list-item horizontal flex-layout center"
               data-id="${listItem.id}"
-              data-name="${listItem.name}"
+              data-name="${t(listItem.name)}"
               ${data?.selectedId === listItem.id || data?.selectedName === listItem.name ? 'selected' : ''}
               >
                 <span class="radio"></span>
-                <span class="value">${listItem.value}</span>
+                <span class="value">${t(listItem.value)}</span>
               </li>
             `
               )
@@ -263,21 +285,21 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
             : ''}
 
           <div class="dialog-buttons" ${data.noButtons ? 'hidden' : ''}>
-            <a role="button" ${data.noConfirmBtn && 'hidden'}
+            <a role="button" ${data.noConfirmBtn ? 'hidden' : ''}
                tabindex="0"
                class="dialog-button confirm-btn"
                data-default
                autofocus>
-              ${data.confirmBtnText ?? 'Confirm'}
+              ${confirmLabel}
             </a>
 
             <span class="divider horizontal left" ${data.noDivider ? 'hidden' : ''}></span>
 
-            <a role="button" ${data.noCancelBtn && 'hidden'}
+            <a role="button" ${data.noCancelBtn ? 'hidden' : ''}
                tabindex="0"
                class="dialog-button cancel-btn"
                confirm>
-              ${data.cancelBtnText ?? 'Cancel'}
+              ${cancelLabel}
             </a>
           </div>
         </div>
@@ -458,16 +480,32 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
           const confirmBtnEl: HTMLButtonElement | HTMLAnchorElement = newDialogEl!.querySelector('.confirm-btn')!
           const cancelBtnEl: HTMLButtonElement | HTMLAnchorElement = newDialogEl!.querySelector('.cancel-btn')!
 
-          // wire the confirm button (default behavior = confirm + close)
-          confirmBtnEl.onclick = params.onConfirm ?? ((): void => {
-            close(part)
-            toggleIsConfirmed(true)
-          })
-          // wire the cancel button (default behavior = cancel + close)
-          cancelBtnEl.onclick = params.onCancel ?? ((): void => {
-            close(part)
-            toggleIsCancelled(true)
-          })
+          // confirm / cancel: run the callback (if any), then close.
+          // Returning `false` from the callback keeps the dialog open.
+          const runThenClose = (
+            callback: (() => void | boolean | Promise<void | boolean>) | undefined,
+            flag: 'confirm' | 'cancel',
+          ): void => {
+            const finish = (keepOpen: boolean): void => {
+              if (keepOpen) return
+              close(part)
+              if (flag === 'confirm') toggleIsConfirmed(true)
+              else toggleIsCancelled(true)
+            }
+            try {
+              const result = callback?.()
+              if (result && typeof (result as Promise<unknown>).then === 'function') {
+                ;(result as Promise<void | boolean>).then((value) => finish(value === false)).catch(() => finish(false))
+                return
+              }
+              finish(result === false)
+            } catch {
+              finish(false)
+            }
+          }
+
+          confirmBtnEl.onclick = (): void => runThenClose(params.onConfirm, 'confirm')
+          cancelBtnEl.onclick = (): void => runThenClose(params.onCancel, 'cancel')
         }
 
         // still nothing to show? reject.
@@ -478,7 +516,35 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
         }
 
         // reveal the backdrop, then the dialog itself
-        showBackdropOf(part, params.isCancelable ?? true)
+        const isCancelable = params.isCancelable ?? true
+        showBackdropOf(part, isCancelable)
+
+        // a click on a cancelable backdrop closes the dialog (same as Cancel)
+        const currentBackdropEl: HTMLDivElement | null =
+          part === 'main' ? mainBackdropEl : part === 'aside' ? asideBackdropEl : backdropEl
+        if (currentBackdropEl && isCancelable) {
+          const backdropClick = (): void => {
+            currentBackdropEl.removeEventListener('click', backdropClick)
+            const result = params.onCancel?.()
+            const finish = (keepOpen: boolean): void => {
+              if (keepOpen) {
+                // re-arm: the user chose to keep it open
+                currentBackdropEl.addEventListener('click', backdropClick)
+                return
+              }
+              close(part)
+              toggleIsCancelled(true)
+            }
+            if (result && typeof (result as Promise<unknown>).then === 'function') {
+              ;(result as Promise<void | boolean>).then((value) => finish(value === false)).catch(() => finish(false))
+            } else {
+              finish(result === false)
+            }
+          }
+          // replace any previous listener for this open
+          currentBackdropEl.onclick = null
+          currentBackdropEl.addEventListener('click', backdropClick)
+        }
 
         newDialogsEl.hidden = false
         newDialogEl.hidden = false
@@ -522,6 +588,9 @@ const useAbDialog = (dialogType: string = NORMAL_DIALOG): AbDialogResult => {
       dialogsEl,
       mainDialogsEl,
       asideDialogsEl,
+      mainBackdropEl,
+      asideBackdropEl,
+      backdropEl,
       _getDialogHTMLTemplate,
       _installDialogListItemEventListeners,
       closeDialogTimer,

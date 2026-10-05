@@ -30,12 +30,12 @@
 * @authors: Abraham Ukachi <abraham.ukachi@laplateforme.io>
 *
 * Example usage:
-*   1+|> // Use the theme hook (keeps theme in `localStorage`)
-*    -|> import useAbTheme from './useAbTheme'
+*   1+|> // Use the theme hook (keeps theme in `localStorage` under `theme`)
+*    -|> import { useAbTheme } from 'ab-nextjs-hooks'
 *    -|>
 *    -|> const [theme, updateTheme] = useAbTheme('dark')
 *    -|>
-*    -|> updateTheme('dark') // ==> saves "dark" + sets `body[data-theme="dark"]`
+*    -|> updateTheme('dark') // ==> saves "dark" + sets `<html class="dark" data-theme="dark">`
 *
 */
 
@@ -76,8 +76,20 @@ import { useEffect, useState } from 'react'
 // ===== THEME - TYPES & CONSTANTS ===== //
 
 
-// default theme to use when nothing is saved in `localStorage` yet
+/** Default theme when nothing is saved in `localStorage` yet. */
 export const DEFAULT_AB_THEME = 'light'
+
+/**
+ * Storage key used by `useAbTheme` and by ab-elements-app's no-flash theme script.
+ * Value lives on `<html>` as `.light` / `.dark`, `data-theme` and `color-scheme`.
+ */
+export const AB_THEME_STORAGE_KEY = 'theme'
+
+/**
+ * Legacy storage key from `useAbTheme` ≤ 0.1.3 (`body[data-theme]` + `abTheme`).
+ * Still read once on hydrate and migrated to {@link AB_THEME_STORAGE_KEY}.
+ */
+export const AB_THEME_LEGACY_STORAGE_KEY = 'abTheme'
 
 
 // shape of the hook result as a tuple: `[theme, updateTheme]`
@@ -90,6 +102,38 @@ export interface AbThemeInterface {
 }
 
 
+/**
+ * Applies the theme the same way ab-elements-app's no-flash script does:
+ * class + `data-theme` + `color-scheme` on `<html>`.
+ */
+export function applyAbThemeToDocument(theme: string): void {
+  if (typeof document === 'undefined') return
+  const root = document.documentElement
+  root.dataset.theme = theme
+  root.classList.remove('light', 'dark')
+  if (theme === 'light' || theme === 'dark') root.classList.add(theme)
+  root.style.colorScheme = theme
+  // drop the legacy body attribute so the two never disagree
+  if (document.body?.dataset?.theme !== undefined) delete document.body.dataset.theme
+}
+
+
+/**
+ * Reads the saved theme: `theme` first, then the legacy `abTheme` (and migrates it).
+ */
+export function readAbThemeFromStorage(fallback: string = DEFAULT_AB_THEME): string {
+  if (typeof window === 'undefined') return fallback
+  const saved = window.localStorage.getItem(AB_THEME_STORAGE_KEY)
+  if (saved) return saved
+  const legacy = window.localStorage.getItem(AB_THEME_LEGACY_STORAGE_KEY)
+  if (legacy) {
+    window.localStorage.setItem(AB_THEME_STORAGE_KEY, legacy)
+    return legacy
+  }
+  return fallback
+}
+
+
 
 
 // ===== useAbTheme - AB HOOK ===== //
@@ -97,8 +141,12 @@ export interface AbThemeInterface {
 
 /**
  * @name useAbTheme
- * @description A theme hook that reads the saved theme from `localStorage`, keeps it
- * in state, and persists it (along with `body[data-theme]`) whenever it changes
+ * @description A theme hook that reads the saved theme from `localStorage` (`theme`),
+ * keeps it in state, and persists it on `<html>` (class + `data-theme` + `color-scheme`)
+ * whenever it changes — matching ab-elements-app's no-flash script.
+ *
+ * Migration: values previously stored as `abTheme` (and stamped on `body[data-theme]`)
+ * are read once and rewritten under `theme`.
  *
  * @param { string } initialTheme - The fallback theme used when nothing is stored yet
  *
@@ -113,31 +161,25 @@ const useAbTheme: AbThemeInterface = (initialTheme: string = DEFAULT_AB_THEME): 
   // after mount, read any saved theme once (avoids hydration mismatch)
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const saved = window.localStorage.getItem('abTheme')
-    if (saved && saved !== theme) {
-      setTheme(saved)
-    }
+    const saved = readAbThemeFromStorage(initialTheme)
+    if (saved !== theme) setTheme(saved)
     setHydrated(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional one-shot client hydrate
   }, [])
 
-  // persist theme changes after hydration: save to localStorage & stamp body[data-theme]
+  // persist theme changes after hydration
   useEffect(() => {
     if (typeof window === 'undefined' || !hydrated) return
 
-    window.localStorage.setItem('abTheme', theme)
-    window.document.body.dataset.theme = theme
-
+    window.localStorage.setItem(AB_THEME_STORAGE_KEY, theme)
+    applyAbThemeToDocument(theme)
   }, [theme, hydrated])
 
-  // create `updateTheme` as a wrapper over `setTheme`
-  const updateTheme = (theme: string): void => {
-    setTheme(theme)
+  const updateTheme = (next: string): void => {
+    setTheme(next)
   }
 
-  // return the `theme` value & its `updateTheme` setter
   return [theme, updateTheme]
-
 }
 
 

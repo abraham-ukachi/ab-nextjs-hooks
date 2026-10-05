@@ -31,7 +31,7 @@
 
 > IMPORTANT: This is a work in progress and subject to major changes until version 1.0.
 
-> Current release: **0.1.2** on `main`. Tooling target: **Next.js 16.3.4** / React 19.
+> Current release: **0.1.4** on `main`. Tooling target: **Next.js 16.3.4** / React 19.
 
 > Canonical client hook names are the **short** barrel exports (`useBrand`, `useFaq`, …).
 > `useAb*` aliases are also exported for compatibility.
@@ -61,6 +61,16 @@ pnpm install ab-nextjs-hooks
 
 
 ## Client Hooks
+
+
+### Dialogs, toasts & theme (0.1.4)
+
+* `useAbDialog` / `useAbMenu` / `useAbToast` look for **`aside.AbAsideLayout`** (or `aside[data-ab-part="aside"]`), not the first `<aside>` on the page. Sidebars must be a `<nav>` (see `ab-nextjs-components`).
+* Dialog / toast text is **escaped** by default. Pass `html: true` only for trusted markup.
+* `onConfirm` / `onCancel` run, **then** the dialog closes. Return `false` from the callback to keep it open. A cancelable backdrop click does the same as Cancel.
+* Exported types: `AbDialogPart`, `DialogParams`, `DialogList`, `AbDialogResult`, `ToastParams`.
+* `useAbTheme` stores `theme` in `localStorage` and applies it on **`<html>`** (`.light` / `.dark`, `data-theme`, `color-scheme`). Legacy `abTheme` + `body[data-theme]` are migrated once.
+
 
 A list of all the supported custom **hooks** and their current status:
 
