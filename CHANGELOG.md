@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### Unreleased (planned 0.1.5)
+### 0.1.5 (2026-10-14)
 
 * **useAbLocalStorage (G10):** `useState`-like localStorage hook — `[value, set, remove]`; JSON by default (custom `serialize` / `deserialize`); never throws (blocked getter, throwing `getItem` / `setItem`, quota, corrupt JSON → initial value; refused writes kept in memory); SSR-safe via `useSyncExternalStore`; synced across tabs (`storage`) and same-tab instances (`ab-local-storage` event). `typecheck` script. Helpers: `getAbLocalStorage`, `readAbLocalStorage`, `writeAbLocalStorage`
 
