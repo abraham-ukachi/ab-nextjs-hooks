@@ -117,5 +117,18 @@ describe('useAbLocalStorage (G10)', () => {
     expect(renders).toBeLessThan(10) // 🚫 no loop
     expect(errors.mock.calls.flat().join(' ')).not.toMatch(/getSnapshot should be cached|Maximum update depth/) // 🚫 no warning
   })
+
+  // 🔑 key change re-freezes the initial value
+  it('resets the frozen initial value when the key changes', () => {
+    const { result, rerender } = renderHook(({ k, init }) => useAbLocalStorage(k, init), { initialProps: { k: 'k9a', init: { v: 'a' } } }) // 🪝
+    expect(result.current[0]).toEqual({ v: 'a' }) // 🏁 key a
+    rerender({ k: 'k9a', init: { v: 'ignored' } }) // 🔁 same key, new initial → still frozen
+    expect(result.current[0]).toEqual({ v: 'a' }) // 🧊
+    rerender({ k: 'k9b', init: { v: 'b' } }) // 🔑 new key
+    expect(result.current[0]).toEqual({ v: 'b' }) // ✅ re-frozen for key b
+    act(() => result.current[1]({ v: 'b2' })) // ✍️ write key b
+    expect(window.localStorage.getItem('k9b')).toBe('{"v":"b2"}') // ✅ stored under the new key
+    expect(window.localStorage.getItem('k9a')).toBeNull() // ✅ old key untouched
+  })
 })
 

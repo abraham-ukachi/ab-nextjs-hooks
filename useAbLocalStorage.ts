@@ -43,7 +43,7 @@
 'use client'
 
 // ⚛️ React hooks
-import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 
 // 🧠 in-memory fallback per key, used when storage refuses writes (shared by every hook instance)
 const abLocalStorageMemory = new Map<string, string | null>()
@@ -97,7 +97,7 @@ export function writeAbLocalStorage(key: string, raw: string | null): boolean {
  * 🗄️ useAbLocalStorage — a `useState`-like hook backed by localStorage.
  *
  * ⚠️ Notes:
- * - `initialValue` is frozen on the first render (later changes are ignored, like `useState`).
+ * - `initialValue` is frozen on the first render for each key (later changes are ignored, like `useState`; a new `key` re-freezes it).
  * - 🧠 Memory fallback: once a write is refused (quota / blocked storage) the in-memory value
  *   WINS for that key until a later write succeeds — `storage` events from other tabs are then ignored.
  * - 🔁 Pass stable `serialize` / `deserialize` (module-level or `useCallback`): an inline arrow
@@ -111,9 +111,13 @@ export function useAbLocalStorage<T>(key: string, initialValue: T, options: UseA
   const deserialize = options.deserialize ?? (JSON.parse as (raw: string) => T)
   // 🧊 freeze the FIRST initial value: an inline `{}` / `[]` would otherwise be a new object
   //    every render → new snapshot → infinite loop / "getSnapshot should be cached" warning
-  const initialRef = useRef<T>(initialValue)
+  //    🔑 it's re-frozen when the KEY changes (React's "adjust state while rendering" pattern, no effect)
+  const [frozen, setFrozen] = useState<{ key: string; value: T }>(() => ({ key, value: initialValue }))
+  if (frozen.key !== key) setFrozen({ key, value: initialValue }) // 🔑 new key → new frozen initial
+  // 🧊 the initial value for THIS key (current render)
+  const initial = frozen.key === key ? frozen.value : initialValue
   // 🧊 snapshot cache box (useSyncExternalStore needs a stable value per raw string)
-  const [cache] = useState<{ raw?: string | null; value?: T; filled: boolean }>(() => ({ filled: false }))
+  const [cache] = useState<{ key?: string; raw?: string | null; value?: T; filled: boolean }>(() => ({ filled: false }))
 
   // 📖 current raw string (memory fallback wins for this key)
   const readRaw = useCallback((): string | null => (abLocalStorageMemory.has(key) ? abLocalStorageMemory.get(key)! : readAbLocalStorage(key)), [key])
@@ -121,16 +125,16 @@ export function useAbLocalStorage<T>(key: string, initialValue: T, options: UseA
   // 📸 client snapshot
   const getSnapshot = useCallback((): T => {
     const raw = readRaw() // 📖
-    if (cache.filled && cache.raw === raw && raw !== null) return cache.value as T // 🧊 cached
-    if (raw === null) return initialRef.current // 🏁 nothing stored → frozen initial
+    if (cache.filled && cache.key === key && cache.raw === raw && raw !== null) return cache.value as T // 🧊 cached (same key + raw)
+    if (raw === null) return initial // 🏁 nothing stored → frozen initial
     let value: T // 📦 parsed
-    try { value = deserialize(raw) } catch { return initialRef.current } // 🛟 corrupt JSON → frozen initial
-    cache.raw = raw; cache.value = value; cache.filled = true // 🧊 store
+    try { value = deserialize(raw) } catch { return initial } // 🛟 corrupt JSON → frozen initial
+    cache.key = key; cache.raw = raw; cache.value = value; cache.filled = true // 🧊 store
     return value // 📦
-  }, [readRaw, deserialize, cache])
+  }, [readRaw, deserialize, cache, key, initial])
 
   // 📸 server snapshot = initial value
-  const getServerSnapshot = useCallback((): T => initialRef.current, []) // 🖥️ frozen initial (stable)
+  const getServerSnapshot = useCallback((): T => initial, [initial]) // 🖥️ frozen initial (stable per key)
 
   // 🔔 subscribe to cross-tab + same-tab changes
   const subscribe = useCallback((onChange: () => void) => {
