@@ -96,19 +96,24 @@ describe('ab-nextjs-hooks package smoke', () => {
   })
 
   // test the `supportedHooks` catalog
-  it('exports supportedHooks catalog (41 done)', async () => {
+  it('exports supportedHooks catalog (45 done)', async () => {
     // import the package as `mod`
     const mod = await import('../index')
 
     // assert `mod.supportedHooks` exists
     expect(Array.isArray(mod.supportedHooks)).toBe(true)
 
-    // assert there are exactly 40 hooks, all done
-    expect(mod.supportedHooks).toHaveLength(41)
+    // assert there are exactly 45 hooks, all done (🆕 +4 for Welcome v6: media, clipboard, reduced motion, swipe)
+    expect(mod.supportedHooks).toHaveLength(45)
     expect(mod.supportedHooks.every((h) => h.status === 'Done')).toBe(true)
 
     // assert the default export exposes the same catalog
-    expect(mod.default.supportedHooks).toHaveLength(41)
+    expect(mod.default.supportedHooks).toHaveLength(45)
+
+    // 🆕 Welcome v6 hooks are exported from the root barrel
+    for (const name of ['useAbMedia', 'useAbClipboard', 'useAbReducedMotion', 'useAbSwipe', 'resolveAbSwipe', 'copyAbText']) {
+      expect(typeof (mod as Record<string, unknown>)[name], name).toBe('function') // ✅ callable
+    }
   })
 
   // test that every catalogued hook file exists
