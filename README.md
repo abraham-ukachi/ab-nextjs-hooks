@@ -129,6 +129,8 @@ A list of all the supported custom **hooks** and their current status:
 | 2 | *`useAbAuth`* | **server/useAbAuth.ts** | Done |
 | 3 | *`useAbNavLinks`* | **server/useAbNavLinks.ts** | Done |
 
+> IMPORTANT: 🍪 The Welcome must pass `{ maxAge: AB_APP_COOKIE_MAX_AGE.oneYear }` when it sets the `hello` cookie (the default is 7 days).
+
 
 
 > NOTE:
