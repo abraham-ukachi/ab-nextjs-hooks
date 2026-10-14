@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. See [standa
 * **useAbReducedMotion (G32):** live `prefers-reduced-motion: reduce` boolean (`AB_REDUCED_MOTION_QUERY`, same string as animations); `prefersAbReducedMotionNow()`
 * **useAbSwipe (G32):** Pointer Events swipe with 48px threshold or flick velocity, axis lock (vertical drags left to scrolling), `onNext` / `onPrev` flipped in RTL, `[data-ab-swipe-ignore]` zones, touch + pen by default. Pure `resolveAbSwipe` / `getAbSwipeLogical`
 * **G11 cookie lifetime:** `toggleAppHello(state?, { maxAge })` / `toggleAppReady(state?, { maxAge })` (seconds, validated; default stays 7 days so it is non-breaking). Presets `AB_APP_COOKIE_MAX_AGE.oneWeek` / `.oneYear`, `resolveAbAppCookieMaxAge()`, `AbAppCookieOptions`; `useAbApp().toggleHello/toggleReady` forward the options. Cookies now use `Max-Age` instead of `Expires`. Welcome v6 uses 1 year
+* **Theme system mode (G9):** `useAbThemeMode()` → `{ mode, resolvedTheme, setMode }` with `'light' | 'dark' | 'system'`; `'system'` follows `prefers-color-scheme` live. `<html>` keeps the RESOLVED class/`data-theme` (existing `.dark` CSS works) plus new `data-theme-mode`. `useAbTheme` tuple unchanged and accepts `'system'`. New `resolveAbTheme`, `isAbThemeMode`, `AB_THEME_DARK_QUERY`, `AB_THEME_MODES`. App no-flash scripts must resolve `'system'` before paint
 
 ### 0.1.5 (2026-10-14)
 
