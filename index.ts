@@ -27,7 +27,7 @@
 * @name: Hooks - Package Catalog
 * @file: index.ts
 * @type: TypeScript
-* @authors: Abraham Ukachi <abraham.ukachi@laplateforme.io>
+* @authors: Abraham Ukachi <abrahamukachi@gmail.com>
 *
 * Example usage:
 *   1+|> // import the whole hook catalog
@@ -82,6 +82,8 @@ import type { HookCatalogEntry } from './types'
 const supportedHooks: Array<HookCatalogEntry> = [
   // ------ CLIENT hooks (run in the browser) ------
   { name: 'useAbTheme', file: 'useAbTheme.ts', kind: 'client', status: 'Done' },
+  // 🗄️ G10: throw-safe localStorage state
+  { name: 'useAbLocalStorage', file: 'useAbLocalStorage.ts', kind: 'client', status: 'Done' },
   { name: 'useAbMenu', file: 'useAbMenu.ts', kind: 'client', status: 'Done' },
   { name: 'useAbDialog', file: 'useAbDialog.ts', kind: 'client', status: 'Done' },
   { name: 'useAbToast', file: 'useAbToast.ts', kind: 'client', status: 'Done' },
@@ -145,6 +147,16 @@ export {
   readAbThemeFromStorage,
   type AbThemeResult,
 } from './useAbTheme'
+// 🗄️ G10: throw-safe localStorage state
+export {
+  useAbLocalStorage,
+  AB_LOCAL_STORAGE_EVENT,
+  getAbLocalStorage,
+  readAbLocalStorage,
+  writeAbLocalStorage,
+  type UseAbLocalStorageOptions,
+  type UseAbLocalStorageResult,
+} from './useAbLocalStorage'
 export { useAbMenu } from './useAbMenu'
 export {
   useAbDialog,
