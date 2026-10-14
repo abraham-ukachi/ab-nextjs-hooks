@@ -47,3 +47,5 @@ All notable changes to this project will be documented in this file. See [standa
 ### 0.1.1 (2026-09-16)
 
 * Initial Next 16 tooling pass and package smoke tests
+* **G11 cookie lifetime:** `toggleAppHello(state?, { maxAge })` / `toggleAppReady(state?, { maxAge })` (seconds, validated; default stays 7 days so it is non-breaking). Presets `AB_APP_COOKIE_MAX_AGE.oneWeek` / `.oneYear`, `resolveAbAppCookieMaxAge()`, `AbAppCookieOptions`; `useAbApp().toggleHello/toggleReady` forward the options. Cookies now use `Max-Age` instead of `Expires`. Welcome v6 uses 1 year
+
