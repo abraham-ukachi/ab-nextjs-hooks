@@ -27,7 +27,7 @@
 * @name: Package Smoke Test
 * @file: __tests__/package-smoke.test.ts
 * @type: TypeScript
-* @authors: Abraham Ukachi <abraham.ukachi@laplateforme.io>
+* @authors: Abraham Ukachi <abrahamukachi@gmail.com>
 *
 * Example usage:
 *   1+|> // run the package smoke tests
@@ -96,7 +96,7 @@ describe('ab-nextjs-hooks package smoke', () => {
   })
 
   // test the `supportedHooks` catalog
-  it('exports supportedHooks catalog (40 done)', async () => {
+  it('exports supportedHooks catalog (41 done)', async () => {
     // import the package as `mod`
     const mod = await import('../index')
 
@@ -104,11 +104,11 @@ describe('ab-nextjs-hooks package smoke', () => {
     expect(Array.isArray(mod.supportedHooks)).toBe(true)
 
     // assert there are exactly 40 hooks, all done
-    expect(mod.supportedHooks).toHaveLength(40)
+    expect(mod.supportedHooks).toHaveLength(41)
     expect(mod.supportedHooks.every((h) => h.status === 'Done')).toBe(true)
 
     // assert the default export exposes the same catalog
-    expect(mod.default.supportedHooks).toHaveLength(40)
+    expect(mod.default.supportedHooks).toHaveLength(41)
   })
 
   // test that every catalogued hook file exists

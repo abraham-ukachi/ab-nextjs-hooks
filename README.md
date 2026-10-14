@@ -31,7 +31,7 @@
 
 > IMPORTANT: This is a work in progress and subject to major changes until version 1.0.
 
-> Current release: **0.1.4** on `main`. Tooling target: **Next.js 16.3.4** / React 19.
+> Current release: **0.1.5** on `main`. Tooling target: **Next.js 16.3.4** / React 19.
 
 > Canonical client hook names are the **short** barrel exports (`useBrand`, `useFaq`, …).
 > `useAb*` aliases are also exported for compatibility.
