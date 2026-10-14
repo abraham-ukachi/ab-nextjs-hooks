@@ -82,6 +82,10 @@
       "types": "./useAbMedia.ts",
       "default": "./useAbMedia.ts"
     },
+    "./useAbTheme": {
+      "types": "./useAbTheme.ts",
+      "default": "./useAbTheme.ts"
+    },
     "./useAbClipboard": {
       "types": "./useAbClipboard.ts",
       "default": "./useAbClipboard.ts"
