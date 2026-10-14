@@ -1,6 +1,6 @@
 {
   "name": "ab-nextjs-hooks",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "🪝 A lightweight collection of server & client React hooks for abElements created by Abraham Ukachi, and optimized for Next.js applications 😎.",
   "type": "module",
   "main": "index.ts",
@@ -74,6 +74,30 @@
       "default": "./server/*.ts"
     },
     "./package.json": "./package.json",
+    "./useAbLocalStorage": {
+      "types": "./useAbLocalStorage.ts",
+      "default": "./useAbLocalStorage.ts"
+    },
+    "./useAbMedia": {
+      "types": "./useAbMedia.ts",
+      "default": "./useAbMedia.ts"
+    },
+    "./useAbTheme": {
+      "types": "./useAbTheme.ts",
+      "default": "./useAbTheme.ts"
+    },
+    "./useAbClipboard": {
+      "types": "./useAbClipboard.ts",
+      "default": "./useAbClipboard.ts"
+    },
+    "./useAbReducedMotion": {
+      "types": "./useAbReducedMotion.ts",
+      "default": "./useAbReducedMotion.ts"
+    },
+    "./useAbSwipe": {
+      "types": "./useAbSwipe.ts",
+      "default": "./useAbSwipe.ts"
+    },
     "./helpers/useAbToggle": {
       "types": "./helpers/useAbToggle.ts",
       "default": "./helpers/useAbToggle.ts"
