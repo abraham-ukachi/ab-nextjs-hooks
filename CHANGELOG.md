@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### Unreleased (planned 0.1.6, Welcome v6, not bumped)
+
+* **useAbMedia (G10):** live `matchMedia` boolean via `useSyncExternalStore`; SSR/hydration value = `defaultValue` (false); never throws (missing `matchMedia`, invalid query); legacy `addListener` fallback. Helpers: `matchAbMedia`, `getAbMediaQueryList`
+* **useAbClipboard (G10):** `{ copy, copied, error, reset }`; async Clipboard API with `execCommand('copy')` fallback; `copied` auto-resets after `resetAfter` ms (default 2000, `AB_CLIPBOARD_RESET_MS`); timer cleared on unmount. Helper: `copyAbText`
+* **useAbReducedMotion (G32):** live `prefers-reduced-motion: reduce` boolean (`AB_REDUCED_MOTION_QUERY`, same string as animations); `prefersAbReducedMotionNow()`
+* **useAbSwipe (G32):** Pointer Events swipe with 48px threshold or flick velocity, axis lock (vertical drags left to scrolling), `onNext` / `onPrev` flipped in RTL, `[data-ab-swipe-ignore]` zones, touch + pen by default. Pure `resolveAbSwipe` / `getAbSwipeLogical`
+
 ### 0.1.5 (2026-10-14)
 
 * **useAbLocalStorage (G10):** `useState`-like localStorage hook — `[value, set, remove]`; JSON by default (custom `serialize` / `deserialize`); never throws (blocked getter, throwing `getItem` / `setItem`, quota, corrupt JSON → initial value; refused writes kept in memory); SSR-safe via `useSyncExternalStore`; synced across tabs (`storage`) and same-tab instances (`ab-local-storage` event). `typecheck` script. Helpers: `getAbLocalStorage`, `readAbLocalStorage`, `writeAbLocalStorage`

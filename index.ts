@@ -84,6 +84,14 @@ const supportedHooks: Array<HookCatalogEntry> = [
   { name: 'useAbTheme', file: 'useAbTheme.ts', kind: 'client', status: 'Done' },
   // 🗄️ G10: throw-safe localStorage state
   { name: 'useAbLocalStorage', file: 'useAbLocalStorage.ts', kind: 'client', status: 'Done' },
+  // 📐 G10: live CSS media query (SSR-safe)
+  { name: 'useAbMedia', file: 'useAbMedia.ts', kind: 'client', status: 'Done' },
+  // 📋 G10: copy to clipboard + short-lived `copied` flag
+  { name: 'useAbClipboard', file: 'useAbClipboard.ts', kind: 'client', status: 'Done' },
+  // ♿ G32: prefers-reduced-motion as a live boolean
+  { name: 'useAbReducedMotion', file: 'useAbReducedMotion.ts', kind: 'client', status: 'Done' },
+  // 👆 G32: pointer-event swipes (threshold, axis lock, RTL)
+  { name: 'useAbSwipe', file: 'useAbSwipe.ts', kind: 'client', status: 'Done' },
   { name: 'useAbMenu', file: 'useAbMenu.ts', kind: 'client', status: 'Done' },
   { name: 'useAbDialog', file: 'useAbDialog.ts', kind: 'client', status: 'Done' },
   { name: 'useAbToast', file: 'useAbToast.ts', kind: 'client', status: 'Done' },
@@ -157,6 +165,45 @@ export {
   type UseAbLocalStorageOptions,
   type UseAbLocalStorageResult,
 } from './useAbLocalStorage'
+// 📐 G10: live CSS media query
+export {
+  useAbMedia,
+  matchAbMedia,
+  getAbMediaQueryList,
+  type UseAbMediaOptions,
+} from './useAbMedia'
+// 📋 G10: clipboard
+export {
+  useAbClipboard,
+  copyAbText,
+  AB_CLIPBOARD_RESET_MS,
+  type UseAbClipboardOptions,
+  type UseAbClipboardResult,
+} from './useAbClipboard'
+// ♿ G32: reduced motion
+export {
+  useAbReducedMotion,
+  prefersAbReducedMotionNow,
+  AB_REDUCED_MOTION_QUERY,
+} from './useAbReducedMotion'
+// 👆 G32: swipe
+export {
+  useAbSwipe,
+  resolveAbSwipe,
+  getAbSwipeLogical,
+  AB_SWIPE_IGNORE_SELECTOR,
+  AB_SWIPE_THRESHOLD,
+  AB_SWIPE_VELOCITY,
+  AB_SWIPE_MIN_FLICK,
+  AB_SWIPE_LOCK_THRESHOLD,
+  type AbSwipeAxis,
+  type AbSwipeDirection,
+  type AbSwipeEvent,
+  type AbSwipeLogical,
+  type AbSwipePointerType,
+  type AbSwipeThresholds,
+  type UseAbSwipeOptions,
+} from './useAbSwipe'
 export { useAbMenu } from './useAbMenu'
 export {
   useAbDialog,
