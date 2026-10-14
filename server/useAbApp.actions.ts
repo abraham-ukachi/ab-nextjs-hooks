@@ -29,7 +29,7 @@
 * @name: App - AB Server Actions
 * @file: useAbApp.actions.ts
 * @type: TypeScript
-* @authors: Abraham Ukachi <abraham.ukachi@laplateforme.io>
+* @authors: Abraham Ukachi <abrahamukachi@gmail.com>
 */
 
 
@@ -42,6 +42,8 @@
 
 // NEXT.JS hooks
 import { cookies } from 'next/headers'
+// 🍪 G11: configurable cookie lifetime (sync helpers live outside this 'use server' file)
+import { resolveAbAppCookieMaxAge, type AbAppCookieOptions } from './useAbApp.cookie'
 
 
 // ===== AB APP - COOKIE CONSTANTS ===== //
@@ -53,8 +55,7 @@ const COOKIE_READY = 'AB_APP_READY'
 // cookie name used to persist the app's 'hello' state
 const COOKIE_HELLO = 'AB_APP_HELLO'
 
-// cookie lifetime in milliseconds (= 7 days)
-const COOKIE_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 7
+// ⏱️ cookie lifetime: now per call via `options.maxAge` (seconds); default stays 7 days (see useAbApp.cookie.ts)
 
 
 
@@ -92,10 +93,14 @@ export const isAppReady = async (): Promise<boolean> => {
  *   to a given state when `newReadyState` is provided
  *
  * @param { boolean? } newReadyState - Desired ready state; toggles when not provided
+ * @param { AbAppCookieOptions? } options - `maxAge` in seconds (default 7 days)
  *
  * @returns { Promise<boolean> }
  */
-export const toggleAppReady = async (newReadyState?: boolean): Promise<boolean> => {
+export const toggleAppReady = async (
+  newReadyState?: boolean, // 🎚️ explicit state; toggles when undefined
+  options?: AbAppCookieOptions // 🍪 G11: { maxAge } in seconds (e.g. 1 year for Welcome v6)
+): Promise<boolean> => {
   let result = false
 
   try {
@@ -108,7 +113,7 @@ export const toggleAppReady = async (newReadyState?: boolean): Promise<boolean> 
       path: '/',
       sameSite: 'strict',
       secure: true,
-      expires: new Date(Date.now() + COOKIE_MAX_AGE_MS)
+      maxAge: resolveAbAppCookieMaxAge(options) // 🍪 G11: Max-Age in seconds (validated)
     })
 
     result = ready
@@ -150,10 +155,14 @@ export const isAppHello = async (): Promise<boolean> => {
  *   to a given state when `newHelloState` is provided
  *
  * @param { boolean? } newHelloState - Desired hello state; toggles when not provided
+ * @param { AbAppCookieOptions? } options - `maxAge` in seconds (default 7 days)
  *
  * @returns { Promise<boolean> }
  */
-export const toggleAppHello = async (newHelloState?: boolean): Promise<boolean> => {
+export const toggleAppHello = async (
+  newHelloState?: boolean, // 🎚️ explicit state; toggles when undefined
+  options?: AbAppCookieOptions // 🍪 G11: { maxAge } in seconds (e.g. 1 year for Welcome v6)
+): Promise<boolean> => {
   let result = false
 
   try {
@@ -165,7 +174,7 @@ export const toggleAppHello = async (newHelloState?: boolean): Promise<boolean> 
       path: '/',
       sameSite: 'strict',
       secure: true,
-      expires: new Date(Date.now() + COOKIE_MAX_AGE_MS)
+      maxAge: resolveAbAppCookieMaxAge(options) // 🍪 G11: Max-Age in seconds (validated)
     })
 
     result = hello

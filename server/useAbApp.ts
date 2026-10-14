@@ -27,7 +27,7 @@
 * @name: App - AB Server Hook
 * @file: useAbApp.ts
 * @type: TypeScript
-* @authors: Abraham Ukachi <abraham.ukachi@laplateforme.io>
+* @authors: Abraham Ukachi <abrahamukachi@gmail.com>
 *
 * Example usage:
 *   1+|> // Check if the app is ready, then toggle it
@@ -43,6 +43,7 @@
 *    -|> const { isHello, toggleHello } = useAbApp()
 *    -|>
 *    -|> // await toggleHello(true) // ==> true
+*    -|> // await toggleHello(true, { maxAge: AB_APP_COOKIE_MAX_AGE.oneYear }) // 🍪 G11
 *    -|>
 */
 
@@ -61,6 +62,13 @@ import {
   toggleAppReady,
   toggleAppHello
 } from './useAbApp.actions'
+// 🍪 G11: cookie lifetime options + presets (sync, safe to re-export here)
+import {
+  AB_APP_COOKIE_MAX_AGE,
+  AB_APP_COOKIE_DEFAULT_MAX_AGE,
+  resolveAbAppCookieMaxAge,
+  type AbAppCookieOptions
+} from './useAbApp.cookie'
 
 
 // ===== AB APP - TYPES ===== //
@@ -70,8 +78,8 @@ import {
 export interface AbAppContext {
   isReady: () => Promise<boolean>
   isHello: () => Promise<boolean>
-  toggleReady: (newState?: boolean) => Promise<boolean>
-  toggleHello: (newState?: boolean) => Promise<boolean>
+  toggleReady: (newState?: boolean, options?: AbAppCookieOptions) => Promise<boolean> // 🍪 G11 options
+  toggleHello: (newState?: boolean, options?: AbAppCookieOptions) => Promise<boolean> // 🍪 G11 options
 }
 
 
@@ -80,8 +88,12 @@ export {
   isAppReady,
   isAppHello,
   toggleAppReady,
-  toggleAppHello
+  toggleAppHello,
+  AB_APP_COOKIE_MAX_AGE, // ⏱️ presets (seconds)
+  AB_APP_COOKIE_DEFAULT_MAX_AGE, // 🧭 7 days
+  resolveAbAppCookieMaxAge // 🧯 validator
 }
+export type { AbAppCookieOptions } // 🍪
 
 
 
@@ -102,8 +114,8 @@ const useAbApp = (): AbAppContext => {
   return {
     isReady: () => isAppReady(),
     isHello: () => isAppHello(),
-    toggleReady: (newState?: boolean) => toggleAppReady(newState),
-    toggleHello: (newState?: boolean) => toggleAppHello(newState)
+    toggleReady: (newState?: boolean, options?: AbAppCookieOptions) => toggleAppReady(newState, options), // 🍪
+    toggleHello: (newState?: boolean, options?: AbAppCookieOptions) => toggleAppHello(newState, options) // 🍪
   }
 
 }
