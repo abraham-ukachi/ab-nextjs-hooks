@@ -104,4 +104,18 @@ describe('useAbLocalStorage (G10)', () => {
       Object.defineProperty(window, 'localStorage', desc) // ↩️ restore
     }
   })
+
+  // 🧊 object initial value: frozen, no loop, no warning
+  it('freezes an inline object initial value (no render loop, no getSnapshot warning)', () => {
+    const errors = vi.spyOn(console, 'error').mockImplementation(() => {}) // 👂 React warnings
+    let renders = 0 // 🔢 render counter
+    const { result, rerender } = renderHook(() => { renders++; return useAbLocalStorage('k8', { a: 1 }) }) // 🪝 new object each render
+    const first = result.current[0] // 📌
+    rerender() // 🔁
+    rerender() // 🔁
+    expect(result.current[0]).toBe(first) // 🧊 same reference
+    expect(renders).toBeLessThan(10) // 🚫 no loop
+    expect(errors.mock.calls.flat().join(' ')).not.toMatch(/getSnapshot should be cached|Maximum update depth/) // 🚫 no warning
+  })
 })
+

@@ -43,7 +43,7 @@
 'use client'
 
 // ⚛️ React hooks
-import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
+import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 
 // 🧠 in-memory fallback per key, used when storage refuses writes (shared by every hook instance)
 const abLocalStorageMemory = new Map<string, string | null>()
@@ -95,6 +95,13 @@ export function writeAbLocalStorage(key: string, raw: string | null): boolean {
 
 /**
  * 🗄️ useAbLocalStorage — a `useState`-like hook backed by localStorage.
+ *
+ * ⚠️ Notes:
+ * - `initialValue` is frozen on the first render (later changes are ignored, like `useState`).
+ * - 🧠 Memory fallback: once a write is refused (quota / blocked storage) the in-memory value
+ *   WINS for that key until a later write succeeds — `storage` events from other tabs are then ignored.
+ * - 🔁 Pass stable `serialize` / `deserialize` (module-level or `useCallback`): an inline arrow
+ *   recreates `getSnapshot` / `setValue` every render (works, but re-subscribes and breaks memoization).
  * Never throws: a broken / blocked storage just keeps the value in memory.
  * SSR-safe (server snapshot = initialValue) and synced across tabs + hook instances.
  */
@@ -102,6 +109,9 @@ export function useAbLocalStorage<T>(key: string, initialValue: T, options: UseA
   // 🔧 (de)serializers
   const serialize = options.serialize ?? JSON.stringify
   const deserialize = options.deserialize ?? (JSON.parse as (raw: string) => T)
+  // 🧊 freeze the FIRST initial value: an inline `{}` / `[]` would otherwise be a new object
+  //    every render → new snapshot → infinite loop / "getSnapshot should be cached" warning
+  const initialRef = useRef<T>(initialValue)
   // 🧊 snapshot cache box (useSyncExternalStore needs a stable value per raw string)
   const [cache] = useState<{ raw?: string | null; value?: T; filled: boolean }>(() => ({ filled: false }))
 
@@ -112,15 +122,15 @@ export function useAbLocalStorage<T>(key: string, initialValue: T, options: UseA
   const getSnapshot = useCallback((): T => {
     const raw = readRaw() // 📖
     if (cache.filled && cache.raw === raw && raw !== null) return cache.value as T // 🧊 cached
-    if (raw === null) return initialValue // 🏁 nothing stored → initial
+    if (raw === null) return initialRef.current // 🏁 nothing stored → frozen initial
     let value: T // 📦 parsed
-    try { value = deserialize(raw) } catch { return initialValue } // 🛟 corrupt JSON → initial
+    try { value = deserialize(raw) } catch { return initialRef.current } // 🛟 corrupt JSON → frozen initial
     cache.raw = raw; cache.value = value; cache.filled = true // 🧊 store
     return value // 📦
-  }, [readRaw, deserialize, cache, initialValue])
+  }, [readRaw, deserialize, cache])
 
   // 📸 server snapshot = initial value
-  const getServerSnapshot = useCallback((): T => initialValue, [initialValue])
+  const getServerSnapshot = useCallback((): T => initialRef.current, []) // 🖥️ frozen initial (stable)
 
   // 🔔 subscribe to cross-tab + same-tab changes
   const subscribe = useCallback((onChange: () => void) => {
