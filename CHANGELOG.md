@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. See [standa
 * **useAbClipboard (G10):** `{ copy, copied, error, reset }`; async Clipboard API with `execCommand('copy')` fallback; `copied` auto-resets after `resetAfter` ms (default 2000, `AB_CLIPBOARD_RESET_MS`); timer cleared on unmount. Helper: `copyAbText`
 * **useAbReducedMotion (G32):** live `prefers-reduced-motion: reduce` boolean (`AB_REDUCED_MOTION_QUERY`, same string as animations); `prefersAbReducedMotionNow()`
 * **useAbSwipe (G32):** Pointer Events swipe with 48px threshold or flick velocity, axis lock (vertical drags left to scrolling), `onNext` / `onPrev` flipped in RTL, `[data-ab-swipe-ignore]` zones, touch + pen by default. Pure `resolveAbSwipe` / `getAbSwipeLogical`
+* **G11 cookie lifetime:** `toggleAppHello(state?, { maxAge })` / `toggleAppReady(state?, { maxAge })` (seconds, validated; default stays 7 days so it is non-breaking). Presets `AB_APP_COOKIE_MAX_AGE.oneWeek` / `.oneYear`, `resolveAbAppCookieMaxAge()`, `AbAppCookieOptions`; `useAbApp().toggleHello/toggleReady` forward the options. Cookies now use `Max-Age` instead of `Expires`. Welcome v6 uses 1 year
 
 ### 0.1.5 (2026-10-14)
 
@@ -47,5 +48,3 @@ All notable changes to this project will be documented in this file. See [standa
 ### 0.1.1 (2026-09-16)
 
 * Initial Next 16 tooling pass and package smoke tests
-* **G11 cookie lifetime:** `toggleAppHello(state?, { maxAge })` / `toggleAppReady(state?, { maxAge })` (seconds, validated; default stays 7 days so it is non-breaking). Presets `AB_APP_COOKIE_MAX_AGE.oneWeek` / `.oneYear`, `resolveAbAppCookieMaxAge()`, `AbAppCookieOptions`; `useAbApp().toggleHello/toggleReady` forward the options. Cookies now use `Max-Age` instead of `Expires`. Welcome v6 uses 1 year
-
