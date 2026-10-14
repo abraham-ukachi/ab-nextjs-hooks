@@ -111,7 +111,7 @@ describe('ab-nextjs-hooks package smoke', () => {
     expect(mod.default.supportedHooks).toHaveLength(45)
 
     // 🆕 Welcome v6 hooks are exported from the root barrel
-    for (const name of ['useAbMedia', 'useAbClipboard', 'useAbReducedMotion', 'useAbSwipe', 'resolveAbSwipe', 'copyAbText']) {
+    for (const name of ['useAbMedia', 'useAbTheme', 'useAbClipboard', 'useAbReducedMotion', 'useAbSwipe', 'resolveAbSwipe', 'copyAbText']) {
       expect(typeof (mod as Record<string, unknown>)[name], name).toBe('function') // ✅ callable
     }
   })
@@ -119,7 +119,7 @@ describe('ab-nextjs-hooks package smoke', () => {
   // 🆕 deep subpath exports (Welcome v6): components import single hooks, not the whole barrel
   it('exposes single-hook subpath exports that point at real files', () => {
     const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) // 📦 manifest
-    for (const name of ['useAbLocalStorage', 'useAbMedia', 'useAbClipboard', 'useAbReducedMotion', 'useAbSwipe']) {
+    for (const name of ['useAbLocalStorage', 'useAbMedia', 'useAbTheme', 'useAbClipboard', 'useAbReducedMotion', 'useAbSwipe']) {
       const entry = pkg.exports[`./${name}`] // 🔑 subpath
       expect(entry, name).toEqual({ types: `./${name}.ts`, default: `./${name}.ts` }) // ✅ shape
       expect(() => readFileSync(join(root, `${name}.ts`), 'utf8'), name).not.toThrow() // ✅ file exists
