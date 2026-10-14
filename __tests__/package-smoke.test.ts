@@ -116,6 +116,16 @@ describe('ab-nextjs-hooks package smoke', () => {
     }
   })
 
+  // 🆕 deep subpath exports (Welcome v6): components import single hooks, not the whole barrel
+  it('exposes single-hook subpath exports that point at real files', () => {
+    const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) // 📦 manifest
+    for (const name of ['useAbLocalStorage', 'useAbMedia', 'useAbClipboard', 'useAbReducedMotion', 'useAbSwipe']) {
+      const entry = pkg.exports[`./${name}`] // 🔑 subpath
+      expect(entry, name).toEqual({ types: `./${name}.ts`, default: `./${name}.ts` }) // ✅ shape
+      expect(() => readFileSync(join(root, `${name}.ts`), 'utf8'), name).not.toThrow() // ✅ file exists
+    }
+  })
+
   // test that every catalogued hook file exists
   it('every catalogued hook file exists', async () => {
     // import the package as `mod`

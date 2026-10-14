@@ -74,6 +74,26 @@
       "default": "./server/*.ts"
     },
     "./package.json": "./package.json",
+    "./useAbLocalStorage": {
+      "types": "./useAbLocalStorage.ts",
+      "default": "./useAbLocalStorage.ts"
+    },
+    "./useAbMedia": {
+      "types": "./useAbMedia.ts",
+      "default": "./useAbMedia.ts"
+    },
+    "./useAbClipboard": {
+      "types": "./useAbClipboard.ts",
+      "default": "./useAbClipboard.ts"
+    },
+    "./useAbReducedMotion": {
+      "types": "./useAbReducedMotion.ts",
+      "default": "./useAbReducedMotion.ts"
+    },
+    "./useAbSwipe": {
+      "types": "./useAbSwipe.ts",
+      "default": "./useAbSwipe.ts"
+    },
     "./helpers/useAbToggle": {
       "types": "./helpers/useAbToggle.ts",
       "default": "./helpers/useAbToggle.ts"
