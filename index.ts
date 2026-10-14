@@ -154,6 +154,15 @@ export {
   applyAbThemeToDocument,
   readAbThemeFromStorage,
   type AbThemeResult,
+  // 🌗 G9: light / dark / system
+  useAbThemeMode,
+  resolveAbTheme,
+  isAbThemeMode,
+  AB_THEME_DARK_QUERY,
+  AB_THEME_MODES,
+  type AbThemeMode,
+  type AbResolvedTheme,
+  type AbThemeModeResult,
 } from './useAbTheme'
 // 🗄️ G10: throw-safe localStorage state
 export {
