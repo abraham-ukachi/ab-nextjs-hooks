@@ -90,6 +90,8 @@ const supportedHooks: Array<HookCatalogEntry> = [
   { name: 'useAbClipboard', file: 'useAbClipboard.ts', kind: 'client', status: 'Done' },
   // ♿ G32: prefers-reduced-motion as a live boolean
   { name: 'useAbReducedMotion', file: 'useAbReducedMotion.ts', kind: 'client', status: 'Done' },
+  // 🔭 G46 (0.1.7): "On this page" scroll spy + reduced-motion-safe scroll
+  { name: 'useAbScrollSpy', file: 'useAbScrollSpy.ts', kind: 'client', status: 'Done' },
   // 👆 G32: pointer-event swipes (threshold, axis lock, RTL)
   { name: 'useAbSwipe', file: 'useAbSwipe.ts', kind: 'client', status: 'Done' },
   { name: 'useAbMenu', file: 'useAbMenu.ts', kind: 'client', status: 'Done' },
@@ -195,6 +197,20 @@ export {
   prefersAbReducedMotionNow,
   AB_REDUCED_MOTION_QUERY,
 } from './useAbReducedMotion'
+// 🔭 G46 (0.1.7): scroll spy for AbToc
+export {
+  useAbScrollSpy,
+  scrollToAbSection,
+  AB_SCROLL_SPY_ROOT_MARGIN,
+  type UseAbScrollSpyOptions,
+  type ScrollToAbSectionOptions,
+} from './useAbScrollSpy'
+// 🌗 0.1.7: no-flash theme script (also server-safe at 'ab-nextjs-hooks/abThemeScript')
+export {
+  abThemeScript,
+  getAbThemeScript,
+  type AbThemeScriptOptions,
+} from './abThemeScript'
 // 👆 G32: swipe
 export {
   useAbSwipe,

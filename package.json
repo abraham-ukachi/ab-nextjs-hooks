@@ -60,6 +60,7 @@
     "helpers",
     "server",
     "useAb*.ts",
+    "abThemeScript.ts",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"
@@ -93,6 +94,14 @@
     "./useAbReducedMotion": {
       "types": "./useAbReducedMotion.ts",
       "default": "./useAbReducedMotion.ts"
+    },
+    "./useAbScrollSpy": {
+      "types": "./useAbScrollSpy.ts",
+      "default": "./useAbScrollSpy.ts"
+    },
+    "./abThemeScript": {
+      "types": "./abThemeScript.ts",
+      "default": "./abThemeScript.ts"
     },
     "./useAbSwipe": {
       "types": "./useAbSwipe.ts",
