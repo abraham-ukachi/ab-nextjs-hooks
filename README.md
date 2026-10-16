@@ -119,6 +119,30 @@ A list of all the supported custom **hooks** and their current status:
 
 
 
+### Docs shell (0.1.7)
+
+```tsx
+'use client'
+import { useAbScrollSpy, scrollToAbSection } from 'ab-nextjs-hooks'
+
+// 🔭 "On this page": the first visible section wins; the last one sticks between sections
+const activeId = useAbScrollSpy(['overview', 'install', 'packages'], { rootMargin: '-64px 0px -60% 0px' })
+// ♿ smooth scroll, instant under prefers-reduced-motion; leaves room for a 64px sticky app bar
+scrollToAbSection('install', { offset: 64 })
+```
+
+```tsx
+// app/layout.tsx (server component): no theme flash on first paint
+import { abThemeScript } from 'ab-nextjs-hooks/abThemeScript'
+
+<head><script dangerouslySetInnerHTML={{ __html: abThemeScript }} /></head>
+// getAbThemeScript({ defaultTheme: 'system' }) follows the OS until the user picks a theme
+```
+
+`abThemeScript` applies the theme exactly like `useAbTheme` (`<html class data-theme data-theme-mode style="color-scheme">`, key `theme`, legacy `abTheme` migrated). With storage blocked it follows `prefers-color-scheme`.
+
+> `useAbHotkey` (⌘K) isn't in 0.1.7: the search palette lands in P5 (D24 a).
+
 ## Server Hooks
 
 A list of all the supported custom **hooks** and their current status:

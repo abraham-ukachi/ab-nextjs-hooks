@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.7 (2026-10-16)
+
+* 🔭 **`useAbScrollSpy(ids, { rootMargin, threshold, root, enabled, initialId })`** (G46): the active section for an "On this page" TOC. One IntersectionObserver; the first visible id in order wins and the last one sticks between sections; SSR / no-IO safe. Also **`scrollToAbSection(id, { offset, updateHash })`**: smooth, or instant under reduced motion. `AB_SCROLL_SPY_ROOT_MARGIN` = `'-64px 0px -60% 0px'`
+* 🌗 **`abThemeScript` / `getAbThemeScript({ defaultTheme, storageKey, legacyStorageKey })`**: the inline no-flash script, server-safe at `ab-nextjs-hooks/abThemeScript`. Paints `<html>` exactly like `applyAbThemeToDocument` (tested), migrates `abTheme`, falls back to the OS scheme when storage is blocked, and JSON-encodes its options
+* 📦 New entry points `./useAbScrollSpy` and `./abThemeScript`; catalog 46 hooks
+* ⏭️ `useAbHotkey` (G48) is deferred to P5 (D24 a)
+
 ### 0.1.6 (2026-10-14)
 
 * **useAbMedia (G10):** live `matchMedia` boolean via `useSyncExternalStore`; SSR/hydration value = `defaultValue` (false); never throws (missing `matchMedia`, invalid query); legacy `addListener` fallback. Helpers: `matchAbMedia`, `getAbMediaQueryList`
