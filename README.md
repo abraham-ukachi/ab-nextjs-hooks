@@ -129,6 +129,8 @@ import { useAbScrollSpy, scrollToAbSection } from 'ab-nextjs-hooks'
 const activeId = useAbScrollSpy(['overview', 'install', 'packages'], { rootMargin: '-64px 0px -60% 0px' })
 // ♿ smooth scroll, instant under prefers-reduced-motion; leaves room for a 64px sticky app bar
 scrollToAbSection('install', { offset: 64 })
+// 📜 inside a scroll container (same root as useAbScrollSpy): scrolls it, not the window
+scrollToAbSection('install', { root: mainEl })
 ```
 
 ```tsx

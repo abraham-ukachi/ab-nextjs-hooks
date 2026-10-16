@@ -116,4 +116,16 @@ describe('scrollToAbSection ♿', () => {
     expect(spy).toHaveBeenCalledWith(expect.objectContaining({ behavior: 'auto' })) // ♿
     expect(scrollToAbSection('nope')).toBe(false) // 🚫
   })
+  it('scrolls the custom root, not the window (James review)', () => {
+    setReduced(false)
+    const win = vi.spyOn(window, 'scrollTo').mockImplementation(() => {}) // 🎭
+    const root = document.createElement('div') // 📜
+    const rootScroll = vi.fn()
+    root.scrollTo = rootScroll as unknown as typeof root.scrollTo
+    win.mockClear()
+    expect(scrollToAbSection('install', { root, offset: 8 })).toBe(true)
+    expect(rootScroll).toHaveBeenCalledWith(expect.objectContaining({ behavior: 'smooth' })) // ✅ root
+    expect(win).not.toHaveBeenCalled() // 🚫 window
+  })
 })
+
