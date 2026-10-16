@@ -113,6 +113,8 @@ export function useAbScrollSpy(ids: readonly string[], options: UseAbScrollSpyOp
 export interface ScrollToAbSectionOptions {
   /** 📏 pixels to leave above the section (e.g. the sticky app bar height). Default `0`. */
   offset?: number
+  /** 📜 the scroll container (same `root` you gave useAbScrollSpy). Default: the window. */
+  root?: Element | null
   /** 🔗 also update the URL hash with `history.replaceState` (no jump). Default `true`. */
   updateHash?: boolean
 }
@@ -125,10 +127,16 @@ export function scrollToAbSection(id: string, options: ScrollToAbSectionOptions 
   if (typeof document === 'undefined') return false // 🖥️ SSR
   const el = document.getElementById(id) // 🔎
   if (!el) return false // 🚫 unknown id
-  const { offset = 0, updateHash = true } = options // 🎛️
-  const top = el.getBoundingClientRect().top + window.scrollY - offset // 📏 absolute target
-  // ♿ smooth only when motion is welcome
-  window.scrollTo({ top, behavior: prefersAbReducedMotionNow() ? 'auto' : 'smooth' })
+  const { offset = 0, updateHash = true, root = null } = options // 🎛️
+  const behavior: ScrollBehavior = prefersAbReducedMotionNow() ? 'auto' : 'smooth' // ♿ smooth only when motion is welcome
+  if (root) {
+    // 📜 custom scroll container (e.g. the core panes main): scroll IT, not the window
+    const top = el.getBoundingClientRect().top - root.getBoundingClientRect().top + root.scrollTop - offset // 📏 inside root
+    root.scrollTo({ top, behavior })
+  } else {
+    const top = el.getBoundingClientRect().top + window.scrollY - offset // 📏 absolute target
+    window.scrollTo({ top, behavior })
+  }
   if (updateHash && typeof history !== 'undefined') history.replaceState(null, '', `#${id}`) // 🔗
   return true // ✅
 }
