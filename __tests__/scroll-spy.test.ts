@@ -129,3 +129,43 @@ describe('scrollToAbSection ♿', () => {
   })
 })
 
+// 📏 hooks 0.1.7 × core 0.1.6 layout rule (G55): the page never scrolls, the main pane does
+describe('useAbScrollSpy root + bottom 🔚', () => {
+  // 📜 a fake pane with controllable scroll metrics
+  const pane = (scrollTop: number) => {
+    const el = document.createElement('div')
+    Object.defineProperty(el, 'scrollHeight', { value: 1000, configurable: true })
+    Object.defineProperty(el, 'clientHeight', { value: 400, configurable: true })
+    el.scrollTop = scrollTop
+    document.body.appendChild(el)
+    return el
+  }
+  it('observes with the given root (the pane) and listens to its scroll', () => {
+    const root = pane(0)
+    renderHook(() => useAbScrollSpy(IDS, { root }))
+    expect(observers[0].opts.root).toBe(root) // 📜 the pane is the IO root
+  })
+  it('at the bottom of the root the last id wins', () => {
+    const root = pane(0)
+    const { result } = renderHook(() => useAbScrollSpy(IDS, { root }))
+    fire({ install: true, packages: true }) // 👀
+    expect(result.current).toBe('install') // 🥇 not at the bottom yet
+    root.scrollTop = 600 // 🔚 600 + 400 = 1000
+    act(() => { root.dispatchEvent(new Event('scroll')) })
+    expect(result.current).toBe('packages') // 🔚 last wins
+  })
+  it('lastAtBottom:false keeps the first visible id', () => {
+    const root = pane(600)
+    const { result } = renderHook(() => useAbScrollSpy(IDS, { root, lastAtBottom: false }))
+    fire({ install: true, packages: true })
+    expect(result.current).toBe('install') // 🥇
+  })
+  it('scrollToAbSection takes a `container` (G55)', () => {
+    const container = document.createElement('div') // 📜
+    const fn = vi.fn(); container.scrollTo = fn as unknown as typeof container.scrollTo
+    const win = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+    expect(scrollToAbSection('install', { container })).toBe(true)
+    expect(fn).toHaveBeenCalledTimes(1) // ✅ the pane
+    expect(win).not.toHaveBeenCalled() // 🚫 the window
+  })
+})

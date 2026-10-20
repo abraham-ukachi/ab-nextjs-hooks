@@ -129,8 +129,10 @@ import { useAbScrollSpy, scrollToAbSection } from 'ab-nextjs-hooks'
 const activeId = useAbScrollSpy(['overview', 'install', 'packages'], { rootMargin: '-64px 0px -60% 0px' })
 // ♿ smooth scroll, instant under prefers-reduced-motion; leaves room for a 64px sticky app bar
 scrollToAbSection('install', { offset: 64 })
-// 📜 inside a scroll container (same root as useAbScrollSpy): scrolls it, not the window
-scrollToAbSection('install', { root: mainEl })
+// 📏 core 0.1.6 panes: the page never scrolls, so spy on and scroll the main pane (G55)
+const { mainScrollElement } = useAbPage() // ab-nextjs-core/ab-page-provider
+const active = useAbScrollSpy(ids, { root: mainScrollElement }) // 🔚 at the bottom the last id wins
+scrollToAbSection('install', { container: mainScrollElement }) // scrolls the pane, not the window
 ```
 
 ```tsx
