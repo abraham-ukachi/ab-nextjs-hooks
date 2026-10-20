@@ -1,6 +1,6 @@
 {
   "name": "ab-nextjs-hooks",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "🪝 A lightweight collection of server & client React hooks for abElements created by Abraham Ukachi, and optimized for Next.js applications 😎.",
   "type": "module",
   "main": "index.ts",
@@ -32,7 +32,7 @@
   "author": {
     "name": "Abraham Ukachi",
     "url": "https://github.com/abraham-ukachi",
-    "email": "abraham.ukachi@laplateforme.io"
+    "email": "abrahamukachi@gmail.com"
   },
   "license": "MIT",
   "peerDependencies": {
@@ -60,6 +60,7 @@
     "helpers",
     "server",
     "useAb*.ts",
+    "abThemeScript.ts",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"
@@ -93,6 +94,14 @@
     "./useAbReducedMotion": {
       "types": "./useAbReducedMotion.ts",
       "default": "./useAbReducedMotion.ts"
+    },
+    "./useAbScrollSpy": {
+      "types": "./useAbScrollSpy.ts",
+      "default": "./useAbScrollSpy.ts"
+    },
+    "./abThemeScript": {
+      "types": "./abThemeScript.ts",
+      "default": "./abThemeScript.ts"
     },
     "./useAbSwipe": {
       "types": "./useAbSwipe.ts",
