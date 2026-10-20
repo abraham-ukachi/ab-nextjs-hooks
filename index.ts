@@ -202,6 +202,7 @@ export {
   useAbScrollSpy,
   scrollToAbSection,
   AB_SCROLL_SPY_ROOT_MARGIN,
+  AB_SCROLL_SPY_PANE_ROOT_MARGIN,
   type UseAbScrollSpyOptions,
   type ScrollToAbSectionOptions,
 } from './useAbScrollSpy'

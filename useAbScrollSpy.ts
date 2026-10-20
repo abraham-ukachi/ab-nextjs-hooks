@@ -52,7 +52,8 @@ import { prefersAbReducedMotionNow } from './useAbReducedMotion'
 
 /** 🎛️ Options for {@link useAbScrollSpy}. */
 export interface UseAbScrollSpyOptions {
-  /** 📏 IntersectionObserver rootMargin (e.g. `'-64px 0px -60% 0px'` for a sticky 64px app bar). */
+  /** 📏 IntersectionObserver rootMargin. Default: `AB_SCROLL_SPY_ROOT_MARGIN` for the window (64px sticky bar),
+   *  `AB_SCROLL_SPY_PANE_ROOT_MARGIN` when `root` is set (a pane has no bar inside it). */
   rootMargin?: string
   /** 🎚️ IntersectionObserver threshold (default `0`). */
   threshold?: number | number[]
@@ -68,6 +69,8 @@ export interface UseAbScrollSpyOptions {
 
 /** 📏 Default margin: ignore the top 64px (sticky app bar) and the bottom 60% (so the section near the top wins). */
 export const AB_SCROLL_SPY_ROOT_MARGIN = '-64px 0px -60% 0px'
+/** 📏 Default margin with a `root` (core 0.1.6 panes main): the bar sits outside the pane, only the bottom 60% is ignored. */
+export const AB_SCROLL_SPY_PANE_ROOT_MARGIN = '0px 0px -60% 0px'
 
 /**
  * 🔭 useAbScrollSpy — which section of the page is "current" for an "On this page" TOC.
@@ -79,7 +82,9 @@ export const AB_SCROLL_SPY_ROOT_MARGIN = '-64px 0px -60% 0px'
  */
 export function useAbScrollSpy(ids: readonly string[], options: UseAbScrollSpyOptions = {}): string | null {
   // 🎛️ options with defaults
-  const { rootMargin = AB_SCROLL_SPY_ROOT_MARGIN, threshold = 0, root = null, enabled = true, initialId, lastAtBottom = true } = options
+  const { threshold = 0, root = null, enabled = true, initialId, lastAtBottom = true } = options
+  // 📏 James (must-fix): a pane root has no app bar over it, so no -64px top margin there
+  const rootMargin = options.rootMargin ?? (root ? AB_SCROLL_SPY_PANE_ROOT_MARGIN : AB_SCROLL_SPY_ROOT_MARGIN)
   // 🧭 current id (seeded so the first paint already marks something)
   const [activeId, setActiveId] = useState<string | null>(initialId !== undefined ? initialId : (ids[0] ?? null))
   // 👁️ ids that are on screen right now

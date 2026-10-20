@@ -144,6 +144,13 @@ describe('useAbScrollSpy root + bottom 🔚', () => {
     const root = pane(0)
     renderHook(() => useAbScrollSpy(IDS, { root }))
     expect(observers[0].opts.root).toBe(root) // 📜 the pane is the IO root
+    expect(observers[0].opts.rootMargin).toBe('0px 0px -60% 0px') // 📏 no -64px inside a pane (James)
+  })
+  it('the window keeps the -64px default, an explicit rootMargin always wins', () => {
+    renderHook(() => useAbScrollSpy(IDS))
+    expect(observers[0].opts.rootMargin).toBe('-64px 0px -60% 0px') // 🪟
+    renderHook(() => useAbScrollSpy(IDS, { root: pane(0), rootMargin: '-8px 0px 0px 0px' }))
+    expect(observers[1].opts.rootMargin).toBe('-8px 0px 0px 0px') // ✋
   })
   it('at the bottom of the root the last id wins', () => {
     const root = pane(0)
