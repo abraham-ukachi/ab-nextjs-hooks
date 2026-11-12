@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.8](https://github.com/abraham-ukachi/ab-nextjs-hooks/compare/v0.1.7...v0.1.8) (2026-11-12)
+
+* Normalize the changelog format and backfill missing entries.
+
 ## [0.1.7](https://github.com/abraham-ukachi/ab-nextjs-hooks/compare/e0f1cf4ccd2eb6146d55462b1efc92bca50a09b3...v0.1.7) (2026-10-20)
 
 * 🔭 **`useAbScrollSpy(ids, { rootMargin, threshold, root, enabled, initialId })`** (G46): the active section for an "On this page" TOC. One IntersectionObserver; the first visible id in order wins and the last one sticks between sections; SSR / no-IO safe. Also **`scrollToAbSection(id, { offset, updateHash, root })`**: scrolls `root` when given (a pane), else the window; smooth, or instant under reduced motion. `AB_SCROLL_SPY_ROOT_MARGIN` = `'-64px 0px -60% 0px'`
