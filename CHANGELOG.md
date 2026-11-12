@@ -1,8 +1,8 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file.
 
-### 0.1.7 (2026-10-16)
+## [0.1.7](https://github.com/abraham-ukachi/ab-nextjs-hooks/compare/e0f1cf4ccd2eb6146d55462b1efc92bca50a09b3...v0.1.7) (2026-10-20)
 
 * 🔭 **`useAbScrollSpy(ids, { rootMargin, threshold, root, enabled, initialId })`** (G46): the active section for an "On this page" TOC. One IntersectionObserver; the first visible id in order wins and the last one sticks between sections; SSR / no-IO safe. Also **`scrollToAbSection(id, { offset, updateHash, root })`**: scrolls `root` when given (a pane), else the window; smooth, or instant under reduced motion. `AB_SCROLL_SPY_ROOT_MARGIN` = `'-64px 0px -60% 0px'`
 * 📏 **Panes scrolling (D35, G55):** with core 0.1.6 the page never scrolls, so pass the main pane as `root` (`useAbPage().mainScrollElement`); the spy listens to that scroller, and **at the bottom of the root the last id wins** (`lastAtBottom`, default `true`). With a `root` the default margin is `AB_SCROLL_SPY_PANE_ROOT_MARGIN` = `'0px 0px -60% 0px'` (no app bar inside a pane); the window keeps `-64px`. `scrollToAbSection` takes **`container`** (`root` stays as a deprecated alias)
@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file. See [standa
 * 📦 New entry points `./useAbScrollSpy` and `./abThemeScript`; catalog 46 hooks
 * ⏭️ `useAbHotkey` (G48) is deferred to P5 (D24 a)
 
-### 0.1.6 (2026-10-14)
+## [0.1.6](https://github.com/abraham-ukachi/ab-nextjs-hooks/compare/ea5eba955b74ab758655ba028eaacda306c484e4...e0f1cf4ccd2eb6146d55462b1efc92bca50a09b3) (2026-10-14)
 
 * **useAbMedia (G10):** live `matchMedia` boolean via `useSyncExternalStore`; SSR/hydration value = `defaultValue` (false); never throws (missing `matchMedia`, invalid query); legacy `addListener` fallback. Helpers: `matchAbMedia`, `getAbMediaQueryList`
 * **useAbClipboard (G10):** `{ copy, copied, error, reset }`; async Clipboard API with `execCommand('copy')` fallback; `copied` auto-resets after `resetAfter` ms (default 2000, `AB_CLIPBOARD_RESET_MS`); timer cleared on unmount. Helper: `copyAbText`
@@ -20,11 +20,11 @@ All notable changes to this project will be documented in this file. See [standa
 * **Theme system mode (G9):** `useAbThemeMode()` → `{ mode, resolvedTheme, setMode }` with `'light' | 'dark' | 'system'`; `'system'` follows `prefers-color-scheme` live. `<html>` keeps the RESOLVED class/`data-theme` (existing `.dark` CSS works) plus new `data-theme-mode`. `useAbTheme` tuple unchanged and accepts `'system'`. New `resolveAbTheme`, `isAbThemeMode`, `AB_THEME_DARK_QUERY`, `AB_THEME_MODES`. App no-flash scripts must resolve `'system'` before paint
 * **Docs:** README note: the Welcome passes `{ maxAge: AB_APP_COOKIE_MAX_AGE.oneYear }` (default stays 7 days)
 
-### 0.1.5 (2026-10-14)
+## [0.1.5](https://github.com/abraham-ukachi/ab-nextjs-hooks/compare/3ef634e49209da83b03a641a39d08de544157d11...ea5eba955b74ab758655ba028eaacda306c484e4) (2026-10-14)
 
 * **useAbLocalStorage (G10):** `useState`-like localStorage hook — `[value, set, remove]`; JSON by default (custom `serialize` / `deserialize`); never throws (blocked getter, throwing `getItem` / `setItem`, quota, corrupt JSON → initial value; refused writes kept in memory); SSR-safe via `useSyncExternalStore`; synced across tabs (`storage`) and same-tab instances (`ab-local-storage` event). `typecheck` script. Helpers: `getAbLocalStorage`, `readAbLocalStorage`, `writeAbLocalStorage`
 
-### 0.1.4 (2026-10-05)
+## [0.1.4](https://github.com/abraham-ukachi/ab-nextjs-hooks/compare/f8593361ac312cb236cb73ac15f4a6980e1e6d4e...3ef634e49209da83b03a641a39d08de544157d11) (2026-10-05)
 
 * **Dialogs:** target `aside.AbAsideLayout` / `aside[data-ab-part="aside"]` (never the first `<aside>` / a sidebar)
 * **Dialogs:** a cancelable backdrop click closes the dialog; `onConfirm` / `onCancel` run **then** close (return `false` to keep it open)
@@ -33,20 +33,17 @@ All notable changes to this project will be documented in this file. See [standa
 * **Theme:** `useAbTheme` uses the `theme` key on `<html>` (class + `data-theme` + `color-scheme`), matching ab-elements-app's no-flash script; migrates legacy `abTheme` / `body[data-theme]` once
 * **Menus / toasts:** same aside-layout selector as dialogs; toast uses the `.popIn` class from `ab-nextjs-animations`
 
-### 0.1.3 (2026-10-03)
+## [0.1.3](https://github.com/abraham-ukachi/ab-nextjs-hooks/compare/v0.1.2...f8593361ac312cb236cb73ac15f4a6980e1e6d4e) (2026-10-03)
 
 * Publish to npm automatically from GitHub Actions with Trusted Publishing (OIDC + provenance, no NPM_TOKEN)
 * Ship only package files via `files`; `next` peer is now `^16.3.4`
 * Export `./helpers/*` and `./helpers/useAbToggle` for deep imports (already in the published 0.1.2 tarball)
 
-### 0.1.2 (2026-09-17)
+## [0.1.2](https://github.com/abraham-ukachi/ab-nextjs-hooks/compare/v0.1.1...v0.1.2) (2026-09-23)
 
 * Next.js **16.3.4** / React 19 peers and eslint-config-next flat config
 * Export surface expanded for client hooks + stricter TypeScript types
 * Copyright year → 2026
-
-### Unreleased (fix/james-review-0.1.2)
-
 * Smoke test asserts package version **0.1.2**
 * Short barrel names are canonical (`useBrand`, `useFaq`, …); `useAb*` aliases retained
 * Cookie-mutating server actions live in `server/*.actions.ts` (`'use server'`); sync `useAbApp` / `useAbAuth` stay plain modules (fixes "Server Actions must be async functions")
@@ -55,6 +52,10 @@ All notable changes to this project will be documented in this file. See [standa
 * `package.json` `exports` + `files`; removed `peerDependenciesMeta` optional flags for next/react/react-dom
 * README reflects **0.1.2** / `main` (dropped stale `chore/upgrade-next-16` note)
 
-### 0.1.1 (2026-09-16)
+## [0.1.1](https://github.com/abraham-ukachi/ab-nextjs-hooks/compare/4ff71ca47fea1d7f08ebdcd42f0aa83b67ae1619...v0.1.1) (2026-09-16)
 
 * Initial Next 16 tooling pass and package smoke tests
+
+## 0.1.0 (2024-06-04)
+
+* Initial release
