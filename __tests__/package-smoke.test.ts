@@ -96,22 +96,22 @@ describe('ab-nextjs-hooks package smoke', () => {
   })
 
   // test the `supportedHooks` catalog
-  it('exports supportedHooks catalog (46 done)', async () => {
+  it('exports supportedHooks catalog (47 done)', async () => {
     // import the package as `mod`
     const mod = await import('../index')
 
     // assert `mod.supportedHooks` exists
     expect(Array.isArray(mod.supportedHooks)).toBe(true)
 
-    // assert there are exactly 45 hooks, all done (🆕 +4 for Welcome v6: media, clipboard, reduced motion, swipe)
-    expect(mod.supportedHooks).toHaveLength(46)
+    // assert there are exactly 47 hooks, all done (🆕 +4 for Welcome v6: media, clipboard, reduced motion, swipe; ⌨️ +1 in 0.1.9: useAbHotkey)
+    expect(mod.supportedHooks).toHaveLength(47)
     expect(mod.supportedHooks.every((h) => h.status === 'Done')).toBe(true)
 
     // assert the default export exposes the same catalog
-    expect(mod.default.supportedHooks).toHaveLength(46)
+    expect(mod.default.supportedHooks).toHaveLength(47)
 
     // 🆕 Welcome v6 hooks are exported from the root barrel
-    for (const name of ['useAbMedia', 'useAbTheme', 'useAbClipboard', 'useAbReducedMotion', 'useAbSwipe', 'resolveAbSwipe', 'copyAbText']) {
+    for (const name of ['useAbMedia', 'useAbTheme', 'useAbClipboard', 'useAbReducedMotion', 'useAbSwipe', 'resolveAbSwipe', 'copyAbText', 'useAbHotkey', 'useAbHotkeyLabel', 'formatAbHotkey']) {
       expect(typeof (mod as Record<string, unknown>)[name], name).toBe('function') // ✅ callable
     }
   })
@@ -119,7 +119,7 @@ describe('ab-nextjs-hooks package smoke', () => {
   // 🆕 deep subpath exports (Welcome v6): components import single hooks, not the whole barrel
   it('exposes single-hook subpath exports that point at real files', () => {
     const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) // 📦 manifest
-    for (const name of ['useAbLocalStorage', 'useAbMedia', 'useAbTheme', 'useAbClipboard', 'useAbReducedMotion', 'useAbSwipe']) {
+    for (const name of ['useAbLocalStorage', 'useAbMedia', 'useAbTheme', 'useAbClipboard', 'useAbReducedMotion', 'useAbSwipe', 'useAbHotkey']) {
       const entry = pkg.exports[`./${name}`] // 🔑 subpath
       expect(entry, name).toEqual({ types: `./${name}.ts`, default: `./${name}.ts` }) // ✅ shape
       expect(() => readFileSync(join(root, `${name}.ts`), 'utf8'), name).not.toThrow() // ✅ file exists

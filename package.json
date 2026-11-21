@@ -99,6 +99,10 @@
       "types": "./useAbScrollSpy.ts",
       "default": "./useAbScrollSpy.ts"
     },
+    "./useAbHotkey": {
+      "types": "./useAbHotkey.ts",
+      "default": "./useAbHotkey.ts"
+    },
     "./abThemeScript": {
       "types": "./abThemeScript.ts",
       "default": "./abThemeScript.ts"
