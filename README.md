@@ -145,7 +145,24 @@ import { abThemeScript } from 'ab-nextjs-hooks/abThemeScript'
 
 `abThemeScript` applies the theme exactly like `useAbTheme` (`<html class data-theme data-theme-mode style="color-scheme">`, key `theme`, legacy `abTheme` migrated). With storage blocked it follows `prefers-color-scheme`.
 
-> `useAbHotkey` (⌘K) isn't in 0.1.7: the search palette lands in P5 (D24 a).
+### Keyboard shortcuts (0.1.9)
+
+```tsx
+'use client'
+import { useAbHotkey, useAbHotkeyLabel, AB_HOTKEY_SEARCH } from 'ab-nextjs-hooks'
+
+// ⌨️ ONE listener in the app shell: ⌘K on Apple, Ctrl+K elsewhere ('mod+k' = AB_HOTKEY_SEARCH)
+useAbHotkey(AB_HOTKEY_SEARCH, () => setOpen('search')) // fires in inputs by default (`mod` / Ctrl / Meta / Alt)
+// 🏷️ the key cap for a trigger that only SHOWS the shortcut (it doesn't listen): "⌘K" / "Ctrl+K"
+const { label, ariaKeyShortcuts } = useAbHotkeyLabel(AB_HOTKEY_SEARCH)
+```
+
+* `mod` means Meta (⌘) on Apple and Control everywhere else. Modifiers must match exactly, and letters also match on `event.code`, so ⌘K still works on a Cyrillic layout.
+* SSR-safe: nothing runs on the server, and `useAbHotkeyLabel` renders the `Ctrl+K` label until hydration has read the platform.
+* In inputs, textareas, selects and `contenteditable`, a combo with `mod` / Ctrl / Meta / Alt (e.g. `mod+k`) fires by default, and a bare (or Shift-only) key does not. An explicit `allowInInputs` always wins, and with several combos the default is decided per combo. IME composition is always ignored, and held-down repeats are ignored unless `allowRepeat`.
+* It calls `preventDefault()` on a match (`preventDefault: false` to opt out) and skips events another listener already handled (`ignoreHandled`), so two bindings of the same combo never double-fire.
+* Other options: `enabled`, `eventType` (`keydown` / `keyup`), `capture`, `target` (default `window`) and `platform` (`'apple'` / `'other'`, for tests). The latest handler is always called without re-subscribing.
+* Pure helpers: `parseAbHotkey`, `matchAbHotkey`, `formatAbHotkey`, `getAbHotkeyAriaKeyshortcuts`, `isAbApplePlatform`, `isAbEditableTarget` and `allowsAbHotkeyInInputs`. Deep import: `ab-nextjs-hooks/useAbHotkey`.
 
 ## Server Hooks
 
