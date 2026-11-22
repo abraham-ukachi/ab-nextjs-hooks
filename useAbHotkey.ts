@@ -134,6 +134,12 @@ const NON_TEXT_INPUTS = new Set(['button', 'checkbox', 'radio', 'submit', 'reset
 // 🔕 the platform never changes during a visit → nothing to subscribe to
 const noopSubscribe = () => () => {}
 
+/** ⚠️ development / test only: silent in production builds */
+function warnAbHotkey(message: string): void {
+  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'production') return // 🏭
+  console.warn(message) // ⚠️
+}
+
 
 // ===== PURE HELPERS (usable outside React) ===== //
 
@@ -160,6 +166,7 @@ export function resolveAbHotkeyPlatform(platform?: AbHotkeyPlatform): AbHotkeyPl
 /**
  * 🧩 parseAbHotkey — turn `'mod+shift+k'` into an AbHotkey. Case-insensitive, spaces ignored,
  * `+` separates parts (write `plus` for the + key, or end with `++`). Throws on an empty or modifier-only combo.
+ * If more than one non-modifier key is listed (`mod+k+p`), the last one wins and a dev-only warning is issued.
  */
 export function parseAbHotkey(combo: string): AbHotkey {
   // 🧱 start with no modifiers
@@ -167,6 +174,8 @@ export function parseAbHotkey(combo: string): AbHotkey {
   // ✂️ lower-case, drop spaces (except a lone ' ' key), split on '+' — and `mod++` means "mod + the + key"
   const raw = combo.trim().toLowerCase()
   const parts = raw.endsWith('++') ? [...raw.slice(0, -2).split('+'), '+'] : raw.split('+')
+  // 🔑 set when we already saw a main key (a second one is a typo: we keep the last and warn)
+  let extraKey = false
   // 🔁 each part is a modifier or the (single) main key
   for (const part of parts.map((x) => (x === '+' ? x : x.trim()))) {
     // 🙈 skip empty bits (e.g. a trailing '+')
@@ -174,11 +183,14 @@ export function parseAbHotkey(combo: string): AbHotkey {
     // 🎛️ a modifier → set its flag
     const flag = MODIFIERS[part]
     if (flag) { out[flag] = true; continue }
-    // 🔑 the main key (aliases resolved)
+    // 🔑 a second non-modifier key → remember, then keep this (last) one
+    if (out.key) extraKey = true
     out.key = KEY_ALIASES[part] ?? part
   }
   // 🧯 a combo needs a real key
   if (!out.key) throw new Error(`useAbHotkey: "${combo}" has no key (e.g. "mod+k")`)
+  // ⚠️ typo guard: "mod+k+p" is almost certainly a mistake; last key wins (non-breaking)
+  if (extraKey) warnAbHotkey(`useAbHotkey: "${combo}" has more than one key; using the last one ("${out.key}")`)
   // ✅ parsed
   return out
 }

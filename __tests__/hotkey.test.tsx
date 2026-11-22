@@ -82,6 +82,16 @@ describe('parseAbHotkey 🧩', () => {
     expect(() => parseAbHotkey('mod+shift')).toThrow(/no key/) // 🧯
     expect(() => parseAbHotkey('')).toThrow(/no key/) // 🧯
   })
+  it('keeps the last key when more than one is listed, and warns in dev', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {}) // 👀
+    expect(parseAbHotkey('mod+k+p')).toEqual({ key: 'p', mod: true, ctrl: false, meta: false, alt: false, shift: false }) // 🔑 last wins
+    expect(warn).toHaveBeenCalledTimes(1) // ⚠️
+    expect(String(warn.mock.calls[0][0])).toMatch(/more than one key.*"p"/) // 📝
+    warn.mockClear() // 🧹
+    expect(parseAbHotkey('mod+k')).toMatchObject({ key: 'k' }) // ✅ a normal combo
+    expect(warn).not.toHaveBeenCalled() // 🔕
+    warn.mockRestore() // 🧹
+  })
 })
 
 describe('matchAbHotkey 🎯', () => {
