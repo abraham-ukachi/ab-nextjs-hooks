@@ -140,6 +140,9 @@ function warnAbHotkey(message: string): void {
   console.warn(message) // ⚠️
 }
 
+// ♿ bare keys the page (and assistive tech) already owns — binding them without a modifier is usually a typo
+const RESERVED_BARE_KEYS = new Set(['tab', 'escape', 'enter', ' '])
+
 
 // ===== PURE HELPERS (usable outside React) ===== //
 
@@ -361,6 +364,14 @@ export function useAbHotkey(combo: string | readonly string[], handler: AbHotkey
   const key = list.join('\u0000')
   // 🧩 parsed once per combo change (throws early on a bad combo, during render, where the stack is useful)
   const parsed = useMemo(() => key.split('\u0000').map((c) => ({ combo: c, hk: parseAbHotkey(c) })), [key])
+
+  // ⚠️ dev-only: bare Tab / Escape / Enter / Space can steal the key from the page (a dialog should use { enabled })
+  useEffect(() => {
+    for (const { combo, hk } of parsed) {
+      const bare = !hk.mod && !hk.ctrl && !hk.meta && !hk.alt && !hk.shift && RESERVED_BARE_KEYS.has(hk.key) // ♿
+      if (bare) warnAbHotkey(`useAbHotkey: binding bare "${combo}" can steal Tab, Escape, Enter or Space from the page. Add a modifier (e.g. "mod+${combo}"), or pass { enabled } so it only listens while a dialog is open.`)
+    }
+  }, [parsed])
 
   // 🔁 the latest handler + flag options, read inside the listener (no re-subscribe on every render)
   const latest = useRef({ handler, options })

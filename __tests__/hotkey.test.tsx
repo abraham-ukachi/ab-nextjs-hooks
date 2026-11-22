@@ -261,6 +261,7 @@ describe('useAbHotkey ⌨️', () => {
     add.mockRestore() // 🧹
   })
   it('listens on a custom target; null waits', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {}) // 🔕 bare Escape warns in dev (tested below)
     const box = document.createElement('div'); document.body.appendChild(box) // 🎯
     const fn = vi.fn() // 🔔
     const { rerender } = renderHook(({ t }) => useAbHotkey('escape', fn, { target: t }), { initialProps: { t: null as EventTarget | null } })
@@ -269,6 +270,7 @@ describe('useAbHotkey ⌨️', () => {
     rerender({ t: box }) // ✅ attached
     press({ key: 'Escape' }, box) // ⎋
     expect(fn).toHaveBeenCalledTimes(1) // 🔔
+    warn.mockRestore() // 🧹
   })
   it('SSR: rendering on the server never touches window', () => {
     const Probe = () => { useAbHotkey('mod+k', () => {}); return createElement('p', null, 'ok') } // 🧪
@@ -291,5 +293,20 @@ describe('useAbHotkey ⌨️', () => {
     expect(fn).not.toHaveBeenCalled() // 🙈
     press({ key: '/' }) // 🪟 outside
     expect(fn).toHaveBeenCalledTimes(1) // ✅
+  })
+  it('warns in dev on a bare Tab, Escape, Enter or Space; modifiers (and other keys) stay quiet', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {}) // 👀
+    for (const combo of ['tab', 'escape', 'enter', 'space']) {
+      warn.mockClear() // 🧹
+      renderHook(() => useAbHotkey(combo, () => {})) // ⌨️
+      expect(warn, combo).toHaveBeenCalledTimes(1) // ⚠️
+      expect(String(warn.mock.calls[0][0]), combo).toMatch(new RegExp(`bare "${combo}"`)) // 📝
+    }
+    warn.mockClear() // 🧹
+    renderHook(() => useAbHotkey('mod+enter', () => {})) // ✅ a modifier is fine
+    renderHook(() => useAbHotkey('shift+tab', () => {})) // ✅ Shift+Tab is not bare
+    renderHook(() => useAbHotkey('/', () => {})) // ✅ a bare slash is not reserved
+    expect(warn).not.toHaveBeenCalled() // 🔕
+    warn.mockRestore() // 🧹
   })
 })
