@@ -92,6 +92,8 @@ const supportedHooks: Array<HookCatalogEntry> = [
   { name: 'useAbReducedMotion', file: 'useAbReducedMotion.ts', kind: 'client', status: 'Done' },
   // 🔭 G46 (0.1.7): "On this page" scroll spy + reduced-motion-safe scroll
   { name: 'useAbScrollSpy', file: 'useAbScrollSpy.ts', kind: 'client', status: 'Done' },
+  // ⌨️ G10 (0.1.9, D49): ⌘K / Ctrl+K hotkeys, one listener, SSR-safe
+  { name: 'useAbHotkey', file: 'useAbHotkey.ts', kind: 'client', status: 'Done' },
   // 👆 G32: pointer-event swipes (threshold, axis lock, RTL)
   { name: 'useAbSwipe', file: 'useAbSwipe.ts', kind: 'client', status: 'Done' },
   { name: 'useAbMenu', file: 'useAbMenu.ts', kind: 'client', status: 'Done' },
@@ -206,6 +208,27 @@ export {
   type UseAbScrollSpyOptions,
   type ScrollToAbSectionOptions,
 } from './useAbScrollSpy'
+// ⌨️ G10 (0.1.9, D49): keyboard shortcuts (⌘K on Apple, Ctrl+K elsewhere) + their labels
+export {
+  useAbHotkey,
+  useAbHotkeyLabel,
+  useAbApplePlatform,
+  parseAbHotkey,
+  matchAbHotkey,
+  formatAbHotkey,
+  getAbHotkeyAriaKeyshortcuts,
+  isAbApplePlatform,
+  isAbEditableTarget,
+  allowsAbHotkeyInInputs,
+  resolveAbHotkeyPlatform,
+  AB_HOTKEY_SEARCH,
+  type AbHotkey,
+  type AbHotkeyHandler,
+  type AbHotkeyLabel,
+  type AbHotkeyNavigator,
+  type AbHotkeyPlatform,
+  type UseAbHotkeyOptions,
+} from './useAbHotkey'
 // 🌗 0.1.7: no-flash theme script (also server-safe at 'ab-nextjs-hooks/abThemeScript')
 export {
   abThemeScript,
