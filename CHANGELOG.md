@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 * ✍️ In inputs / textarea / select / `contenteditable` / `role="textbox"`, a combo with `mod` / Ctrl / Meta / Alt (e.g. `mod+k`) fires by default and a bare (or Shift-only) key does not. An explicit `allowInInputs` always wins, and with several combos the default is decided per combo. IME composition (`isComposing` / keyCode 229) is always ignored, and held-down repeats are ignored unless `allowRepeat`. `preventDefault` on a match (default `true`); events another listener already handled are skipped (`ignoreHandled`, default `true`), so two bindings of one combo never double-fire. Also `eventType`, `capture`, `target` and `platform`
 * 🏷️ **`useAbHotkeyLabel(combo?)`** → `{ label, ariaKeyShortcuts, apple }` ("⌘K" / "Ctrl+K", "Meta+K" / "Control+K"); SSR and hydration render the Ctrl label. Also `useAbApplePlatform()` and the pure helpers `parseAbHotkey`, `matchAbHotkey`, `formatAbHotkey`, `getAbHotkeyAriaKeyshortcuts`, `isAbApplePlatform`, `isAbEditableTarget`, `allowsAbHotkeyInInputs` and `resolveAbHotkeyPlatform`
 * 📦 New entry point `./useAbHotkey`; catalog 47 hooks
+* ⚠️ Dev-only: `parseAbHotkey` keeps the last non-modifier key if a combo lists more than one (e.g. `mod+k+p` → `p`) and `console.warn`s; `useAbHotkey` warns if you bind bare Tab, Escape, Enter or Space (they can steal the key from the page)
 
 ## [0.1.8](https://github.com/abraham-ukachi/ab-nextjs-hooks/compare/v0.1.7...v0.1.8) (2026-11-12)
 
