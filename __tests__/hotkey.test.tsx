@@ -100,6 +100,10 @@ describe('matchAbHotkey 🎯', () => {
     expect(matchAbHotkey({ key: 'л', code: 'KeyK', metaKey: true, ctrlKey: false, altKey: false, shiftKey: false }, 'mod+k', 'apple')).toBe(true) // 🇷🇺 ⌘K
     expect(matchAbHotkey({ key: 'л', code: 'KeyL', metaKey: true, ctrlKey: false, altKey: false, shiftKey: false }, 'mod+k', 'apple')).toBe(false) // 🙅 another key
   })
+  it('falls back to event.code for digits (Digit0–Digit9)', () => {
+    expect(matchAbHotkey({ key: 'é', code: 'Digit2', metaKey: false, ctrlKey: true, altKey: false, shiftKey: false }, 'mod+2', 'other')).toBe(true) // 🇫🇷 Ctrl+2
+    expect(matchAbHotkey({ key: 'é', code: 'Digit3', metaKey: false, ctrlKey: true, altKey: false, shiftKey: false }, 'mod+2', 'other')).toBe(false) // 🙅 another digit
+  })
   it('ignores Shift for symbols written without it ("?" is Shift+/)', () => {
     expect(matchAbHotkey({ key: '?', code: 'Slash', metaKey: false, ctrlKey: false, altKey: false, shiftKey: true }, '?', 'other')).toBe(true) // ❓
     expect(matchAbHotkey({ key: '/', code: 'Slash', metaKey: false, ctrlKey: false, altKey: false, shiftKey: false }, '/', 'other')).toBe(true) // ⌨️
@@ -152,10 +156,11 @@ describe('allowsAbHotkeyInInputs ✍️', () => {
 
 describe('isAbEditableTarget ✍️', () => {
   it('text fields count, buttons / checkboxes do not', () => {
-    document.body.innerHTML = '<input id="t"><input id="c" type="checkbox"><textarea id="a"></textarea><div contenteditable="true"><span id="r">x</span></div><button id="b"></button><div role="textbox" id="x"></div>' // 🧱
+    document.body.innerHTML = '<input id="t"><input id="c" type="checkbox"><textarea id="a"></textarea><select id="s"><option>a</option></select><div contenteditable="true"><span id="r">x</span></div><button id="b"></button><div role="textbox" id="x"></div>' // 🧱
     const $ = (id: string) => document.getElementById(id) // 🔎
     expect(isAbEditableTarget($('t'))).toBe(true) // 🔤
     expect(isAbEditableTarget($('a'))).toBe(true) // 📝
+    expect(isAbEditableTarget($('s'))).toBe(true) // 📋 a <select> is "typing" (jump-to-option)
     expect(isAbEditableTarget($('r'))).toBe(true) // ✏️ inside contenteditable
     expect(isAbEditableTarget($('x'))).toBe(true) // ♿ role=textbox
     expect(isAbEditableTarget($('c'))).toBe(false) // ☑️
@@ -258,5 +263,23 @@ describe('useAbHotkey ⌨️', () => {
   it('SSR: rendering on the server never touches window', () => {
     const Probe = () => { useAbHotkey('mod+k', () => {}); return createElement('p', null, 'ok') } // 🧪
     expect(renderToString(createElement(Probe))).toBe('<p>ok</p>') // 🖨️ effects don't run on the server
+  })
+  it('capture: true hears the event in the capture phase (before stopPropagation in bubble)', () => {
+    const fn = vi.fn() // 🔔
+    renderHook(() => useAbHotkey('mod+k', fn, { platform: 'other', capture: true })) // 🪟
+    const stop = (e: Event) => e.stopPropagation() // 🛑 a bubble listener that would hide a bubble-phase hotkey
+    window.addEventListener('keydown', stop) // 🫧
+    press({ key: 'k', ctrlKey: true }) // ⌨️
+    window.removeEventListener('keydown', stop) // 🧹
+    expect(fn).toHaveBeenCalledTimes(1) // ✅ capture ran first
+  })
+  it('a bare key is ignored in a <select> (same as other typable fields)', () => {
+    document.body.innerHTML = '<select id="s"><option>a</option></select>' // 📋
+    const fn = vi.fn() // 🔔
+    renderHook(() => useAbHotkey('/', fn)) // ⌨️ bare slash
+    press({ key: '/' }, document.getElementById('s')!) // ✍️
+    expect(fn).not.toHaveBeenCalled() // 🙈
+    press({ key: '/' }) // 🪟 outside
+    expect(fn).toHaveBeenCalledTimes(1) // ✅
   })
 })
